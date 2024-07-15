@@ -1,0 +1,15 @@
+{
+    "name": "andela/php-framework",
+    "autoload": {
+        "psr-4": {
+            "Andela\\PhpFramework\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andjela",
+            "email": "andjela.dujmov@factory.dev"
+        }
+    ],
+    "require": {}
+}
