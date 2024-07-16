@@ -6,27 +6,20 @@ class Response implements ResponseInterface{
 
     public $content;
     public $statusCode;
-
-    public function __construct()
-    {
-        
-    }
+    public $message;
 
     public function send()
     {
-        echo $this->content;
-    }
-
-    public function status(){
-        return $this->statusCode;
-    }
-
-    public function content(){
-        return $this->content;
+        echo $this->statusCode . ' ' . $this->message . ' {' . $this->content . '}';
     }
 
     public function setContent(string|array|null $content){
         $this->content = $content;
+    }
+    
+    public function setResponseCode(string $message, int $code){
+        $this->statusCode = $code;
+        $this->message = $message;
     }
 
 }
