@@ -18,15 +18,15 @@ class Response implements ResponseInterface{
     }
 
     public function status(){
-
+        return $this->statusCode;
     }
 
     public function content(){
-
+        return $this->content;
     }
 
     public function setContent(string|array|null $content){
-        
+        $this->content = $content;
     }
 
 }

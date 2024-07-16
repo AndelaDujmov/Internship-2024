@@ -13,3 +13,14 @@ Code Editor: VSCode
 ```
 **Autoloader:** vendor/autoload.php
 
+### Router classes
+
+**Route** : src/Route <br>
+**Router** : src/Router <br>
+**Response** : src/Response <br>
+**Request** : src/Request <br>
+
+*Router classes are defined in* **routes.php** <br>
+*Request classes are defined in* **index.php** <br>
+
+*Route represents *
