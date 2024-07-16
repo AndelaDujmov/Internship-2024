@@ -4,6 +4,9 @@ namespace App\Response;
 
 class Response implements ResponseInterface{
 
+    public $content;
+    public $statusCode;
+
     public function __construct()
     {
         
@@ -13,4 +16,17 @@ class Response implements ResponseInterface{
     {
         
     }
+
+    public function status(){
+
+    }
+
+    public function content(){
+
+    }
+
+    public function setContent(string|array|null $content){
+        
+    }
+
 }
