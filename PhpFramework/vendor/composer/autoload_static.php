@@ -9,12 +9,12 @@ class ComposerStaticInit9f137cdbeb77796c7a0411b4f6a667f9
     public static $prefixLengthsPsr4 = array (
         'A' => 
         array (
-            'Andela\\PhpFramework\\' => 20,
+            'App\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Andela\\PhpFramework\\' => 
+        'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),

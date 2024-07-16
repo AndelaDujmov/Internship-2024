@@ -2,7 +2,7 @@
     "name": "andela/php-framework",
     "autoload": {
         "psr-4": {
-            "Andela\\PhpFramework\\": "src/"
+            "App\\": "src/"
         }
     },
     "authors": [

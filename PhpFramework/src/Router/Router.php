@@ -11,18 +11,7 @@ require 'vendor/autoload.php';
 class Router{
 
     public array $routes;
-    private static $instance;
 
-    private function __construct(){
-        $this->routes = [];
-    }
-
-    public static function getInstance(){
-        if(!isset(self::$instance)){
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
     public function createRoute(string $url, string $httpMethod, $callback){
         $this->routes[] = new Route($url, $httpMethod, $callback);
     }
@@ -38,7 +27,7 @@ class Router{
             }
         }
         else
-            $response->setResponseCode("Not Found",404);
+            $response->setResponseCode("Not Found", 404);
 
         return $response->send();
     }
