@@ -14,7 +14,7 @@ class Response implements ResponseInterface{
 
     public function send()
     {
-        
+        echo $this->content;
     }
 
     public function status(){

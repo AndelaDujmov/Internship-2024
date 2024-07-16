@@ -4,44 +4,24 @@ namespace App\Request;
 
 class Request implements RequestInterface{
 
-    public $headers;
-    public $messageBody;
-    public $parameters;
-    public $requestBody;
+    public $queryParams;
+    public $bodyParams;
     public $route;
+    public $method;
 
-    public function __construct(string|array|null $headers, string|array|null $messageBody, string $route){
-        $this->headers = $headers;
-        $this->messageBody = $messageBody;
-        $this->route = $route;
-    }
-    
-    public function retrieveItem(string $source, string $key, string|array|null $default){
-        if(isset($source[$key])){    
-            return $source[$key];
-        }
-        return $default;
+    public function __construct(string $method, string $route){
+        $this->method = $method;
+        $cut = strpos($route, '?');
+        if(!$cut){
+            $this->route = substr($route, 0, $cut);
+            $this->queryParams = substr($route, $cut + 1);
+        }else
+            $this->route = $route;
     }
 
-
-    public function route(string|null $param = null, $default = null){
-
+    public function setBody($body){
+        $this->bodyParams = $body;
     }
 
-    public function setParameters($parameters){
-        $this->parameters = $parameters;
-    }
-
-    public function getParameters(){
-        return $this->parameters;
-    }
-
-    public function setRequestBody(string|array|null $body){
-        $this->requestBody = $body;
-    }
-
-    public function getRequestBody(){
-        return $this->requestBody;
-    }
 
 }
