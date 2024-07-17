@@ -12,13 +12,12 @@ class Router{
 
     public array $routes;
 
-
     public function createRoute(string $url, string|array|object|int|null $parameter, string $httpMethod, mixed $callback) : void {
         $this->routes[] = new Route($url, $parameter, $httpMethod, $callback);
     }
 
-    public function resolver(Request $request) {
-        $response = new Response();
+    public function resolver(Request $request) : void {
+        $response = Response::getInstance();
         $match = false;
 
         if (count($this->routes) > 0){

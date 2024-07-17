@@ -8,6 +8,10 @@ class Response implements ResponseInterface{
     public $statusCode;
     public $message;
 
+    public static function getInstance() : ResponseInterface{
+        return new self();
+    }
+
     public function send() : void {
         if (is_array($this->content)){
             echo json_encode($this->content);
@@ -24,4 +28,9 @@ class Response implements ResponseInterface{
         $this->statusCode = $code;
         $this->message = $message;
     }
+
+    public function getArray() : array{
+        return ["statusCode" => $this->statusCode,"message"=> $this->message, "content" => $this->content];
+    }
+
 }
