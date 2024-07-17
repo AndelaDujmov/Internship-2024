@@ -11,5 +11,7 @@
             "email": "andjela.dujmov@factory.dev"
         }
     ],
-    "require": {}
+    "require": {
+        "twig/twig": "^3.0"
+    }
 }

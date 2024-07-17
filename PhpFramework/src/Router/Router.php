@@ -25,7 +25,6 @@ class Router{
                 if ($route->baseUrl === $request->route && $route->httpMethod == $request->method){
                     call_user_func($route->callback);
                     $response->setResponseCode("OK", 200);
-                    $response->setContent(["name" => "Andjela"]);
                     $match = true;   
                     break;
                 }

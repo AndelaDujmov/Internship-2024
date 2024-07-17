@@ -12,12 +12,12 @@ class Response implements ResponseInterface{
         return new self();
     }
 
-    public function send() : void {
+    public function send() : array {
         if (is_array($this->content)){
-            echo json_encode($this->content);
+            return ["statusCode" => $this->statusCode,"message"=> $this->message, "content" => json_encode($this->content)];;
         }
         else
-            echo $this->statusCode . ' ' . $this->message . ' {' . $this->content . '}';
+            return ["statusCode" => $this->statusCode,"message"=> $this->message, "content" => $this->content];;
     }
 
     public function setContent(string|array|null $content) : void {
