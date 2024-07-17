@@ -13,15 +13,15 @@ class Router{
     public array $routes;
 
 
-    public function createRoute(string $url, string $httpMethod, $callback){
+    public function createRoute(string $url, string $httpMethod, mixed $callback) : void {
         $this->routes[] = new Route($url, $httpMethod, $callback);
     }
 
-    public function resolver(Request $request){
+    public function resolver(Request $request) {
         $response = new Response();
         if (count($this->routes) > 0){
             foreach ($this->routes as $route){
-                if (strpos($route->url, $request->route) && $route->httpMethod == $request->method){
+                if ($route->url === $request->route && $route->httpMethod == $request->method){
                     call_user_func($route->callback);
                     $response->setResponseCode("OK", 200);
                     $response->setContent(["name" => "Andjela"]);
@@ -32,7 +32,7 @@ class Router{
         else
             $response->setResponseCode("Not Found", 404);
 
-        return $response->send();
+        $response->send();
     }
     
 }

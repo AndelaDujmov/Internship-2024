@@ -19,7 +19,7 @@ class Request implements RequestInterface{
             $this->route = $route;
     }
 
-    public function setBody($body){
+    public function setBody(mixed $body) : void {
         $this->bodyParams = $body;
     }
 

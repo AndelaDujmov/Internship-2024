@@ -8,7 +8,7 @@ class Route{
     public $httpMethod;
     public $callback;
     
-    public function __construct(string $url, string $httpMethod, $callback)
+    public function __construct(string $url, string $httpMethod, mixed $callback)
     {
         $this->url = $url;
         $this->httpMethod = $httpMethod;
