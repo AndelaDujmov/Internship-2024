@@ -15,6 +15,9 @@ class Request implements RequestInterface{
         if($cut != false){
             $this->route = substr($route, 0, $cut);
             $this->queryParams = substr($route, $cut + 1);
+       
+            $param = strpos($this->queryParams, '=');
+            $rez = substr($this->queryParams, $param + 1);
         }else
             $this->route = $route;
     }
