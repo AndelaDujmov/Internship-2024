@@ -12,7 +12,7 @@ class Request implements RequestInterface{
     public function __construct(string $method, string $route){
         $this->method = $method;
         $cut = strpos($route, '?');
-        if(!$cut){
+        if($cut != false){
             $this->route = substr($route, 0, $cut);
             $this->queryParams = substr($route, $cut + 1);
         }else

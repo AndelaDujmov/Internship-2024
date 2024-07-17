@@ -12,6 +12,7 @@ class Router{
 
     public array $routes;
 
+
     public function createRoute(string $url, string $httpMethod, $callback){
         $this->routes[] = new Route($url, $httpMethod, $callback);
     }
@@ -23,6 +24,8 @@ class Router{
                 if (strpos($route->url, $request->route) && $route->httpMethod == $request->method){
                     call_user_func($route->callback);
                     $response->setResponseCode("OK", 200);
+                    $response->setContent(["name" => "Andjela"]);
+                    break;
                 }
             }
         }

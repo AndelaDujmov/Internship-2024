@@ -10,7 +10,11 @@ class Response implements ResponseInterface{
 
     public function send()
     {
-        echo $this->statusCode . ' ' . $this->message . ' {' . $this->content . '}';
+        if (is_array($this->content)){
+            echo json_encode($this->content);
+        }
+        else
+            echo $this->statusCode . ' ' . $this->message . ' {' . $this->content . '}';
     }
 
     public function setContent(string|array|null $content){
@@ -21,5 +25,4 @@ class Response implements ResponseInterface{
         $this->statusCode = $code;
         $this->message = $message;
     }
-
 }
