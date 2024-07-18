@@ -38,19 +38,22 @@ class Route{
     }
 
     public function getParameters($url) : array {
-        $routeUrl = $this->getUrlParts($this->url);
-        $requestUrl = $this->getUrlParts($url);
+        $routeUrl = $this->getUrlParts($this->url);   
+        $requestUrl = $this->getUrlParts($url);       
         $params = [];
-
-        for ($i= 0;$i<count($routeUrl);$i++){
-            $str = $routeUrl[$i];
-
-            if ($this->checkPatternMatch($str)){
-                $paramName = trim($str, "{}");
-                $params[$paramName] = $requestUrl[$i];
+    
+        $routeUrlCount = count($routeUrl);
+        $requestUrlCount = count($requestUrl);
+    
+        for ($i = 0; $i < $routeUrlCount; $i++) {
+            if ($i < $requestUrlCount) {
+                $str = $routeUrl[$i]; 
+    
+                if ($this->checkPatternMatch($str)) {
+                    $params[] = $requestUrl[$i];     
+                }
             }
         }
-
         return $params;
     }
 
@@ -59,7 +62,6 @@ class Route{
     }
 
     private function checkPatternMatch(string $string) : bool|int {
-        return preg_match("^{\w+}$", $string);
+        return preg_match('/^{\w+}$/', $string);
     }
-
 }
