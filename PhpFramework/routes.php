@@ -7,5 +7,5 @@ require 'vendor/autoload.php';
 
 $router = new Router();
 
-$router->createRoute("/get/data/{dataId}", HttpMethod::GET->value, function(){echo"This is a get request";});
+$router->createRoute("/get/data/{dataId}", HttpMethod::GET->value, function(mixed $dataId){echo"This is a get request";});
 $router->createRoute("/add/data", HttpMethod::POST->value, function(){echo"This is a post request";});

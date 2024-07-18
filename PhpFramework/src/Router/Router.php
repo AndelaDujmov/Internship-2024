@@ -18,10 +18,12 @@ class Router{
 
     public function resolver(Request $request) : void {
         foreach ($this->routes as $route){
-            if ( $route->match($request->route, $request->method)){
-                
+            if ($route->match($request->route, $request->method)){
+                $parameters = $route->getParameters($request->route);
+                call_user_func_array($route->callback, $parameters);
             }
         }
+        return;
     }
     
 }
