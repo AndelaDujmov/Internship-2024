@@ -34,3 +34,7 @@ Installation <br>
 ```
 
 Usage  <br>
+
+Set up configuration class that will initialise Twig with a specified template directory.<br>
+
+**Twig Loader** : /src/config <br>

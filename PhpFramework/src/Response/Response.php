@@ -15,10 +15,10 @@ class Response implements ResponseInterface{
 
     public function send() : array {
         if (is_array($this->content)){
-            return ["statusCode" => $this->responseCode,"message"=> $this->responseText, "content" => json_encode($this->content)];;
+            return ["headers" => $this->headers, "statusCode" => $this->responseCode,"message"=> $this->responseText, "content" => json_encode($this->content)];;
         }
         else
-            return ["statusCode" => $this->responseCode,"message"=> $this->responseText, "content" => $this->content];;
+            return ["headers" => $this->headers, "statusCode" => $this->responseCode,"message"=> $this->responseText, "content" => $this->content];;
     }
 
     public function setContent(string|array|null $content) : void {

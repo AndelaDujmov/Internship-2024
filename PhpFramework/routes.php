@@ -10,4 +10,4 @@ $router = new Router();
 $controller = new IndexController();
 
 $router->createRoute("/get/data/{params}", HttpMethod::GET->value, [$controller, 'indexAction']);
-//$router->createRoute("/add/data/{params}", HttpMethod::POST->value, [$controller, 'indexJsonAction']);
+$router->createRoute("/get/data/{params}", HttpMethod::POST->value, [$controller, 'indexJsonAction']);
