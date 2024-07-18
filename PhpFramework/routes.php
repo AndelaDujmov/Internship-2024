@@ -6,6 +6,7 @@ use App\Router\Router;
 require 'vendor/autoload.php';
 
 $router = new Router();
+$controller = new IndexController();
 
-$router->createRoute("/get/data/{dataId}", HttpMethod::GET->value, function(mixed $dataId){echo"This is a get request";});
-$router->createRoute("/add/data", HttpMethod::POST->value, function(){echo"This is a post request";});
+$router->createRoute("/get/data/{dataId}", HttpMethod::GET->value, [$controller, 'indexAction']);
+$router->createRoute("/add/data", HttpMethod::POST->value, [$controller, 'indexAction']);

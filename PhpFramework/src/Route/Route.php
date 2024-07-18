@@ -2,8 +2,6 @@
 
 namespace App\Route;
 
-use App\HttpMethod\HttpMethod;
-
 class Route{
 
     public $url;
@@ -17,14 +15,6 @@ class Route{
         $this->httpMethod = $httpMethod;
         $this->callback = $callback;
         
-    }
-
-    public static function get(string $url, mixed $callback) : self {
-        return new self($url, HttpMethod::GET->value, $callback);
-    }
-
-    public static function post(string $url, string|array|object|int|null $parameter, mixed $callback) : self {
-        return new self($url, $parameter, HttpMethod::POST->value, $callback);
     }
 
     public function match(string $requestRoute, string $httpMethod) : bool {

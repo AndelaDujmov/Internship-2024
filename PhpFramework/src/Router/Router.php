@@ -2,6 +2,7 @@
 
 namespace App\Router;
 
+use App\HttpMethod\HttpMethod;
 use App\Request\Request;
 use App\Response\Response;
 use App\Route\Route;
@@ -14,6 +15,14 @@ class Router{
 
     public function createRoute(string $url, string $httpMethod, mixed $callback) : void {
         $this->routes[] = new Route($url, $httpMethod, $callback);
+    }
+
+    public function get(string $url, mixed $callback) : void {
+        $this->routes[] = new Route($url, HttpMethod::GET->value, $callback);
+    }
+
+    public function post(string $url, mixed $callback) : void {
+        $this->routes[] = new Route($url, HttpMethod::POST->value, $callback);
     }
 
     public function resolver(Request $request) : void {

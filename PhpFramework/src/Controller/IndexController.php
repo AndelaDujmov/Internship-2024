@@ -8,18 +8,17 @@ require 'vendor/autoload.php';
 
 class IndexController {
 
-    public function indexAction(Request $request) : array {
+    public function indexAction(mixed $params) : Response {
         $response =  Response::getInstance();
-        $response->setContent(["name" => "Andjela"]);
+        $response->setContent(["param" => $params]);
         $response->setResponseCode("OK", 200);
 
-
-        return $response->send();
+        return $response;
     }
 
-    public function index(Request $request) : JsonResponse {
+    public function indexJsonAction(mixed $params) : JsonResponse {
         $response = Response::getInstance();
-        $content = ["name" => "Andjela"];
+        $content = ["param" => $params];
         
         return new JsonResponse($content, 200, "OK");
     }
