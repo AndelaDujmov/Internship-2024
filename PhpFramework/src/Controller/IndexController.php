@@ -13,7 +13,8 @@ class IndexController {
     public function indexAction(?string $params) : Response {
         $twig = new TwigConfig();
         $response =  Response::getInstance();
-        $response->setContent(["param" => $params ?? null]);
+        $content = $twig->render('httpResponse.html', ["params" => $params]);
+        $response->setContent($content);
         $response->setResponseCode("OK", 200);
         $response->setHeaders('Content-Type: text/html');
     
@@ -21,6 +22,7 @@ class IndexController {
     }
 
     public function indexJsonAction(?string $params) : JsonResponse {
+        $twig = new TwigConfig();
         $content = ["param" => $params ?? null];
         
         return new JsonResponse($content, 200, "OK");
