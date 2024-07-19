@@ -3,7 +3,8 @@
 ### Setup
 
 PHP 8.2, MySQL, Apache server <br>
-Code Editor: VSCode
+Code Editor: VSCode <br>
+OS: Linux <br>
 
 ### Php Framework And Router Class
 
@@ -38,3 +39,27 @@ Usage  <br>
 Set up configuration class that will initialise Twig with a specified template directory.<br>
 
 **Twig Loader** : /src/config <br>
+
+### PDO
+
+Configuration <br>
+
+**Installing PDO MYSQL extension:** 
+
+```bash
+    sudo apt install php-mysql
+```
+
+<br>
+
+After installation it is needed to restart web server to load new extension.
+
+<br>
+
+**Runtime Configuration :** <br>
+
+After the installation update the php.ini file with extension: *extension=pdo.so*
+
+
+
+
