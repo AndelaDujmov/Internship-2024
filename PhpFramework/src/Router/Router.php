@@ -25,7 +25,7 @@ class Router{
         $this->routes[] = new Route($url, HttpMethod::POST->value, $callback);
     }
 
-    public function resolver(Request $request) : void {
+    public function resolver(Request $request) : null|array {
         foreach ($this->routes as $route){
             if ($route->match($request->route, $request->method)){
                 $parameters = $route->getParameters($request->route);
@@ -35,10 +35,10 @@ class Router{
 
                 $response = call_user_func_array($route->callback, $parameters);
                
-                print_r($response->send());
+                return $response->send();
             }
         }
-        return;
+        return null;
     }
     
 }
