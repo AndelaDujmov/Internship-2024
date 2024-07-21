@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Response;
+use App\config\TwigConfig;
 
 class Response implements ResponseInterface{
 
@@ -13,13 +14,13 @@ class Response implements ResponseInterface{
         return new self();
     }
 
-    public function send() : array {
-        if (is_array($this->content)){
-            return ["headers" => $this->headers, "statusCode" => $this->responseCode,"message"=> $this->responseText, "content" => json_encode($this->content)];;
-        }
-        else
-            return ["headers" => $this->headers, "statusCode" => $this->responseCode,"message"=> $this->responseText, "content" => $this->content];;
+    public function send() : string {
+        $twig = new TwigConfig();
+
+        return $twig->render('httpResponse.html.twig', ["headers" => $this->headers, "status" => $this->responseCode . ' ' . $this->responseText, "content" => $this->content]);
     }
+
+   
 
     public function setContent(string|array|null $content) : void {
         $this->content = $content;
@@ -36,6 +37,10 @@ class Response implements ResponseInterface{
 
     public function setHeaders(string $contentType) : void {
         $this->headers[] = $contentType;
+    }
+
+    public function getResponse() : array {
+        return [$this->headers, $this->responseCode, $this->responseText, $this->content];
     }
 
 }

@@ -25,7 +25,7 @@ class Router{
         $this->routes[] = new Route($url, HttpMethod::POST->value, $callback);
     }
 
-    public function resolver(Request $request) : null|array {
+    public function resolver(Request $request) : null|array|string {
         foreach ($this->routes as $route){
             if ($route->match($request->route, $request->method)){
                 $parameters = $route->getParameters($request->route);

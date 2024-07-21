@@ -11,5 +11,5 @@ $requestPost = new Request(HttpMethod::GET->value ,"/get/json/2");
 $requestPost->setBody(["name" => "Adnjela"]);
 $responseGet = $router->resolver($requestGet);
 print_r($responseGet);
-//$responsePost = $router->resolver($requestPost);
-//print_r($responsePost);
+$responsePost = $router->resolver($requestPost);
+print_r($responsePost);
