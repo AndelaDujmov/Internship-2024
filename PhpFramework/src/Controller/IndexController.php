@@ -11,7 +11,6 @@ use Exception;
 
 require 'vendor/autoload.php';
 
-
 class IndexController {
 
     public function __construct() {
@@ -37,8 +36,6 @@ class IndexController {
     }
 
     public function indexJsonAction(?string $params = null) : JsonResponse {
-        
-
         $content = ["name" => "Andjela", "params" => $params];
         
         return new JsonResponse($content, HttpStatusCode::OK->value, HttpStatusCode::OK->name);
