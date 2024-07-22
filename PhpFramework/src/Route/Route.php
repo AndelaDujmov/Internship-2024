@@ -21,14 +21,22 @@ class Route{
         $routeUrl = $this->getUrlParts($this->url);
         $requestUrl = $this->getUrlParts($requestRoute);
 
-        if (($this->httpMethod !== $httpMethod) && (count($routeUrl) !== count($requestUrl))) 
+        if ($this->httpMethod !== $httpMethod)
             return false;
+
+        if (count($requestUrl) > count($routeUrl)) {
+            return false;
+        }
 
         for ($i=0;$i<count($routeUrl);$i++){
             $str = $routeUrl[$i];
 
             if ($this->checkPatternMatch($str))
                 continue;
+
+            if (!isset($requestUrl[$i])) {
+                return false;
+            }
 
             if ($str !== $requestUrl[$i])
                 return false;
@@ -64,4 +72,5 @@ class Route{
     private function checkPatternMatch(string $string) : bool|int {
         return preg_match('/^{\w+}$/', $string);
     }
+
 }

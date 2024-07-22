@@ -20,8 +20,6 @@ class Response implements ResponseInterface{
         return $twig->render('httpResponse.html.twig', ["headers" => $this->headers, "status" => $this->responseCode . ' ' . $this->responseText, "content" => $this->content]);
     }
 
-   
-
     public function setContent(string|array|null $content) : void {
         $this->content = $content;
     }

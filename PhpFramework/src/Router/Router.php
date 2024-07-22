@@ -2,7 +2,7 @@
 
 namespace App\Router;
 
-use App\HttpMethod\HttpMethod;
+use App\Http\HttpMethod;
 use App\Request\Request;
 use App\Response\Response;
 use App\Route\Route;
@@ -11,29 +11,32 @@ require 'vendor/autoload.php';
 
 class Router{
 
-    public array $routes;
+    public static array $routes = [];
 
     public function createRoute(string $url, string $httpMethod, mixed $callback) : void {
         $this->routes[] = new Route($url, $httpMethod, $callback);
     }
 
-    public function get(string $url, mixed $callback) : void {
-        $this->routes[] = new Route($url, HttpMethod::GET->value, $callback);
+    public static function get(string $url, mixed $callback) : void {
+        self::$routes[] = new Route($url, HttpMethod::GET->value, $callback);
     }
 
-    public function post(string $url, mixed $callback) : void {
-        $this->routes[] = new Route($url, HttpMethod::POST->value, $callback);
+    public static function post(string $url, mixed $callback) : void {
+        self::$routes[] = new Route($url, HttpMethod::POST->value, $callback);
     }
 
-    public function resolver(Request $request) : null|array|string {
-        foreach ($this->routes as $route){
+    public static function resolver(Request $request) : null|array|string {
+        foreach (self::$routes as $route){
             if ($route->match($request->route, $request->method)){
                 $parameters = $route->getParameters($request->route);
 
-                if (count($parameters) == null)
-                    $response = call_user_func($route->callback);
+                list($controller, $method) = $route->callback;
+                $instance = new $controller();
 
-                $response = call_user_func_array($route->callback, $parameters);
+                if (count($parameters) == null)
+                    $response = call_user_func([$instance, $method]);
+
+                $response = call_user_func_array([$instance, $method], $parameters);
                
                 return $response->send();
             }

@@ -1,13 +1,10 @@
 <?php
 
 use App\Controller\IndexController;
-use App\HttpMethod\HttpMethod;
-use App\Router\Router;
+use App\Router\Router as Route;
 
 require 'vendor/autoload.php';
 
-$router = new Router();
-$controller = new IndexController();
+Route::get('/get/data/{params}', [IndexController::class, 'indexAction']);
+Route::post("/get/json/{params}", [IndexController::class, 'indexJsonAction']);
 
-$router->createRoute("/get/data/{params}", HttpMethod::GET->value, [$controller, 'indexAction']);
-$router->createRoute("/get/json/{params}", HttpMethod::POST->value, [$controller, 'indexJsonAction']);

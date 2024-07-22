@@ -1,5 +1,12 @@
 <?php
 
+namespace App\Connection;
+
+use InvalidArgumentException;
+use PDO;
+use PDOStatement;
+use SensitiveParameter;
+
 class Connection{
 
     private $dbh;
