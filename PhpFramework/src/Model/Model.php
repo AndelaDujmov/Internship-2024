@@ -3,16 +3,24 @@ use App\Connection\Connection;
 
 class Model {
 
-    private $db;
-    public $table;
-    public $attributes = [];
-    public $id;
+    protected $db;
+    protected $table;
+    protected $id;
+    public $incrementing = true;
+    protected $attributes = [];
+    protected $with = []; // relacije
 
-    public function __construct(Connection $connection) {
-        $this->db = $connection;
+
+    public function __construct(array $attributes = []) {
+        $this->attributes = $attributes;
     }
 
     public function save() : void {
+        $db = $this->db;
+        $attributes = $this->attributes;
+
+        $query = $db->prepare("");
+
 
     }
 

@@ -10,10 +10,12 @@ use SensitiveParameter;
 class Connection{
 
     private $dbh;
+    private $dbname;
     private static $instance;
 
     public function __construct(string $dsn, string $username, #[SensitiveParameter] ?string $password = null) {
        $this->dbh = new PDO($dsn, $username, $password);
+       $this->dbname = $this->extractDbName($dsn);
        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
@@ -60,9 +62,9 @@ class Connection{
 
         $set = implode(', ', $setPlaceholder);
         $where = implode(' AND ', $wherePlaceholder);
-
+        
         $query = 'UPDATE $tableName SET $set WHERE $where';
-
+          
         $pdoStatement = $this->dbh->prepare($query);
 
         foreach ($setValues as $key => $value){
@@ -105,7 +107,7 @@ class Connection{
         $columns = implode(', ', $columnArray);
         $placeholders = implode(', ', $placeholderArray);
 
-        $query = 'INSERT INTO $tableName ($columns) VALUES ($placeholders)';
+        $query = "INSERT INTO $this->dbname.$tableName ($columns) VALUES ($placeholders)";
 
         $pdoStatement = $this->dbh->prepare($query);
 
@@ -134,5 +136,12 @@ class Connection{
         $pdoStatement->execute($params);
         return $pdoStatement;
     }
+
+    function extractDbName(string $dsn): ?string {
+        echo "DSN String: $dsn\n";
+        preg_match('/dbname=([^;]*)/', $dsn, $matches);
+        print_r($matches); // Debugging line
+        return $matches[1] ?? null;
+    }   
 
 }

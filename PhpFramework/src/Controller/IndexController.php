@@ -23,10 +23,16 @@ class IndexController {
         $response->setHeaders('Content-Type: text/html');
 
         if ($this){
-            echo "Succesfully connected to db!";
             $content = ["name" => "Andjela", "params" => $params];
-            $response->setContent($content);
-            $response->setResponseCode(HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+            try{
+                $result->insert('user', ['fname' => 'Iva', 'lname' => 'Ivic']);
+                $response->setContent($content);
+                $response->setResponseCode(HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+            }catch(Exception $e){
+                $response->setContent(null);
+                $response->setResponseCode(HttpStatusCode::NOT_FOUND->name, HttpStatusCode::NOT_FOUND->value);
+                echo $e->getMessage();
+            }
         } else{
             $response->setContent([]);
             $response->setResponseCode(HttpStatusCode::INTERNAL_SERVER_ERROR->name, HttpStatusCode::INTERNAL_SERVER_ERROR->value);
@@ -44,6 +50,8 @@ class IndexController {
     private function loadDb() : Connection|null {
         try{
             $connection = Connection::getInstance($_ENV['DB_URL'], $_ENV['DB_USER'], $_ENV['DB_PASSWD']);
+            echo $_ENV['DB_URL'];
+            echo "Succesfully connected";
             return $connection;
         } catch (Exception $e){
             log($e->getMessage());
