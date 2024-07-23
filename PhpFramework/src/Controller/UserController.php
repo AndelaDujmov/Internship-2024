@@ -45,35 +45,37 @@ class UserController extends IndexController {
             return $this->indexAction('Edited', HttpStatusCode::OK->name, HttpStatusCode::OK->value);
         }
         return $this->indexAction('Unable to edit.', HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
-    }
+    }*/
 
     public function findUser($id) : Response {
         $user = User::find(intval($id));
         
         if ($user != null){
-            return $this->indexAction($user->fname . ' ' . $user->lname, HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+            return $this->indexAction("findUser.html.twig", ['firstName' => $user->fname, 'lastName' => $user->lname], HttpStatusCode::OK->name, HttpStatusCode::OK->value);
         }
-        return $this->indexAction(null, HttpStatusCode::NOT_FOUND->name, HttpStatusCode::NOT_FOUND->value);
+        return $this->indexAction("findUser.html.twig", ['user' => null], HttpStatusCode::NOT_FOUND->name, HttpStatusCode::NOT_FOUND->value);
     }
+
 
     public function softDeleteUser($id) : Response {
         $user = User::find(intval($id));
         
         if ($user != null){
             $user->softDelete();
-            return $this->indexAction('Succesfully soft deleted', HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+            return $this->indexAction("httpResponse.html.twig", ['message' => 'Successfully soft deleted!'], HttpStatusCode::OK->name, HttpStatusCode::OK->value);
         }
-        return $this->indexAction('Unable to find data', HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
+        return $this->indexAction("httpResponse.html.twig", ['message' => 'Unable to find data!'], HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
     }
 
+    
     public function deleteUser($id) : Response {
         $user = User::find(intval($id));
         
         if ($user != null){
             $user->delete();
-            return $this->indexAction('Succesfully deleted', HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+            return $this->indexAction("httpResponse.html.twig", ['message' => 'Successfully deleted!'], HttpStatusCode::OK->name, HttpStatusCode::OK->value);
         }
-        return $this->indexAction('Unable to find data', HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
-    }*/
+        return $this->indexAction("httpResponse.html.twig", ['message' => 'Unable to find data!'], HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
+    }
 
 }

@@ -148,7 +148,6 @@ class Connection{
         $stmt = $this->dbh->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        var_dump($result);
         return $result ?? [];
     }
 
