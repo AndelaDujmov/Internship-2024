@@ -2,9 +2,12 @@
 
 namespace App\Model;
 use App\Connection\Connection;
+use App\traits\SoftDelete;
+use App\traits\Timestamps;
 
 class Model {
 
+    use Timestamps, SoftDelete;
     protected $db;
     protected $table;
     protected $id = 'id';
@@ -19,15 +22,19 @@ class Model {
         if (isset($this->attributes[$this->id])) {
             $this->update();
         }else{
+            if ($this->enabled && !isset($this->attributes["created_at"]))
+                $this->setCreatedAt();
             $id = $this->db->insert($this->table, $this->attributes);
             $attributes[$this->id] = $id;
         }
     }
 
     public function update() : void {
+        if ($this->enabled)
+            $this->setUpdatedAt();
         $pkValue = $this->attributes[$this->id];
-        unset($this->attributes[$this->id]);
-        $this->db->update($this->table, $this->attributes, [$this->id => $pkValue]);
+        $id = $this->db->update($this->table, $this->attributes, [$this->id => $pkValue]);
+        $attributes[$this->id] = $id;
     }
 
     public static function find(int|string $primaryKey) : object|null {
@@ -57,5 +64,6 @@ class Model {
     public function __get($name) : mixed {
         return $this->attributes[$name] ?? null;
     }
+
     
 }

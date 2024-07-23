@@ -10,8 +10,6 @@ use App\Response\Response;
 use Dotenv\Dotenv;
 use Exception;
 
-use function PHPSTORM_META\type;
-
 require 'vendor/autoload.php';
 
 class IndexController {
@@ -27,14 +25,16 @@ class IndexController {
 
         $content = ["name" => "Andjela", "params" => $params];
         try{
-            //$model = new User(['fname' => 'Iva', 'lname' => 'Ivic']);
-            //$model->save();
-            $user = User::find(49);
+            $model = new User(['fname' => 'Iva', 'lname' => 'Ivic']);
+            $model->save();
+            $user = User::find(10);
             print_r($user->attributes);
-            $user->fname = "Ivana";
-            $user->lname = "Ivic";
+            $user->fname = "Jela";
+            $user->lname = "Jelic";
             $user->update();
-            $user = User::find(49);
+            $user2 = User::find(23);
+            $user2->softDelete();
+            $user2->delete();
             print_r($user->attributes);
             $response->setContent($content);
             $response->setResponseCode(HttpStatusCode::OK->name, HttpStatusCode::OK->value);
@@ -51,10 +51,9 @@ class IndexController {
         $content = ["name" => "Andjela", "params" => $params];
 
         try{
-            //$model = new User(['fname' => 'Jelena', 'lname' => 'F']);
-            //$model->save();
+            $model = new User(['fname' => 'Jelena', 'lname' => 'F']);
+            $model->save();
             $user = User::find(50);
-            //print_r($user->attributes);
             return new JsonResponse($content, HttpStatusCode::OK->value, HttpStatusCode::OK->name);
         }catch(Exception $e){
             echo $e->getMessage();

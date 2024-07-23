@@ -40,16 +40,13 @@ class Connection{
         return $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function insert(string $tableName, array $assocArray = []) : bool|string {
-        /*
-        if (isset($assocArray[0]) && is_array($assocArray[0])){
-            return $this->groupInsert($tableName, $assocArray);
-        }*/
+    public function insert(string $tableName, array $assocArray = []) : bool|string|int {
         if($this->singleInsert($tableName, $assocArray))
             return $this->dbh->lastInsertId();
+        return null;
     }
 
-    public function update(string $tableName, array $columnValues = [], array $condition = []) : bool {
+    public function update(string $tableName, array $columnValues = [], array $condition = []) : bool|string|int {
         $setPlaceholder = [];
         $setValues = [];
         $wherePlaceholder = [];
@@ -80,21 +77,35 @@ class Connection{
             $pdoStatement->bindValue($key, $value);
         }
 
+        $executed = $pdoStatement->execute();
+        
+        if ($executed)
+            return $this->dbh->lastInsertId();
+        else
+            return null;
+    }
+
+    public function delete(string $tableName, array $condition = []) : bool|int|string {
+        $wherePlaceholder = [];
+        $whereValues = [];
+
+        foreach ($condition as $key => $value){
+            $wherePlaceholder[] = "$key = :where$key";
+            $whereValues[":where$key"] = $value;
+        }
+
+        $where = implode(' AND ', $wherePlaceholder);
+
+        $query = "DELETE FROM $this->dbname.$tableName WHERE {$where}";
+        
+        $pdoStatement = $this->dbh->prepare($query);
+
+        foreach ($whereValues as $key => $value) {
+            $pdoStatement->bindValue($key, $value);
+        }
+
         return $pdoStatement->execute();
     }
-
-    /*
-    private function groupInsert(string $tableName, array $assocArray = []) : bool{
-        if (empty($assocArray))
-            throw new InvalidArgumentException("Wrong data format for input.");
-
-        $columnArray = array_keys($assocArray);
-
-        foreach ($assocArray as $rowIndex => $row){
-
-        }
-    }
-    */
 
     private function singleInsert(string $tableName, array $assocArray = []) : bool {
         if (empty($assocArray))
@@ -153,7 +164,6 @@ class Connection{
 
     private function extractDbName(string $dsn): ?string {
         preg_match("/dbname=([^;]*)/", $dsn, $matches);
-        print_r($matches); // Debugging line
         return $matches[1] ?? null;
     }   
 
