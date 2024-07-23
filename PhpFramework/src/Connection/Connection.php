@@ -10,20 +10,24 @@ use SensitiveParameter;
 class Connection{
 
     private $dbh;
-    private $dbname;
+    private string $dbname;
     private static $instance;
 
-    public function __construct(string $dsn, string $username, #[SensitiveParameter] ?string $password = null) {
-       $this->dbh = new PDO($dsn, $username, $password);
-       $this->dbname = $this->extractDbName($dsn);
+    public function __construct() {
+       $this->dbh = new PDO($_ENV['DB_URL'], $_ENV['DB_USER'], $_ENV['DB_PASSWD']);
+       $this->dbname = $this->extractDbName($_ENV['DB_URL']);
        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    public static function getInstance(string $dsn, string $username, #[SensitiveParameter] ?string $password = null) : self {
+    public static function getInstance() : self {
         if (self::$instance === null) {
-            self::$instance = new self($dsn, $username, $password);
+            self::$instance = new self();
         }
         return self::$instance;
+    }
+
+    public function getPDO() : PDO {
+        return $this->dbh;
     }
 
     public function fetchAssoc(string $query, array $options = []) : array {
@@ -36,12 +40,13 @@ class Connection{
         return $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function insert(string $tableName, array $assocArray = []) : bool {
+    public function insert(string $tableName, array $assocArray = []) : bool|string {
         /*
         if (isset($assocArray[0]) && is_array($assocArray[0])){
             return $this->groupInsert($tableName, $assocArray);
         }*/
-        return $this->singleInsert($tableName, $assocArray);
+        if($this->singleInsert($tableName, $assocArray))
+            return $this->dbh->lastInsertId();
     }
 
     public function update(string $tableName, array $columnValues = [], array $condition = []) : bool {
@@ -63,7 +68,7 @@ class Connection{
         $set = implode(', ', $setPlaceholder);
         $where = implode(' AND ', $wherePlaceholder);
         
-        $query = 'UPDATE $tableName SET $set WHERE $where';
+        $query = "UPDATE $this->dbname.$tableName SET $set WHERE $where";
           
         $pdoStatement = $this->dbh->prepare($query);
 
@@ -117,6 +122,15 @@ class Connection{
 
         return $pdoStatement->execute();
     }
+    
+    public function findByID(string $tableName, int|string $modelID, int|string $id) : mixed {
+        $query = "SELECT * FROM  $this->dbname.$tableName WHERE {$modelID} = :id";
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $result ?? null;
+    }
 
     private function execute(string $query, array $params = []) : PDOStatement {
         $pdoStatement = $this->dbh->prepare($query);
@@ -137,9 +151,8 @@ class Connection{
         return $pdoStatement;
     }
 
-    function extractDbName(string $dsn): ?string {
-        echo "DSN String: $dsn\n";
-        preg_match('/dbname=([^;]*)/', $dsn, $matches);
+    private function extractDbName(string $dsn): ?string {
+        preg_match("/dbname=([^;]*)/", $dsn, $matches);
         print_r($matches); // Debugging line
         return $matches[1] ?? null;
     }   

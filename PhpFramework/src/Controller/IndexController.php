@@ -3,11 +3,14 @@ namespace App\Controller;
 
 use App\Connection\Connection;
 use App\Http\HttpStatusCode;
+use App\Model\User;
 use App\Request\Request;
 use App\Response\JsonResponse\JsonResponse;
 use App\Response\Response;
 use Dotenv\Dotenv;
 use Exception;
+
+use function PHPSTORM_META\type;
 
 require 'vendor/autoload.php';
 
@@ -18,45 +21,44 @@ class IndexController {
     }
 
     public function indexAction(?string $params = null) : Response {
-        $result = $this->loadDb();
+       
         $response =  Response::getInstance();
         $response->setHeaders('Content-Type: text/html');
 
-        if ($this){
-            $content = ["name" => "Andjela", "params" => $params];
-            try{
-                $result->insert('user', ['fname' => 'Iva', 'lname' => 'Ivic']);
-                $response->setContent($content);
-                $response->setResponseCode(HttpStatusCode::OK->name, HttpStatusCode::OK->value);
-            }catch(Exception $e){
-                $response->setContent(null);
-                $response->setResponseCode(HttpStatusCode::NOT_FOUND->name, HttpStatusCode::NOT_FOUND->value);
-                echo $e->getMessage();
-            }
-        } else{
-            $response->setContent([]);
-            $response->setResponseCode(HttpStatusCode::INTERNAL_SERVER_ERROR->name, HttpStatusCode::INTERNAL_SERVER_ERROR->value);
+        $content = ["name" => "Andjela", "params" => $params];
+        try{
+            //$model = new User(['fname' => 'Iva', 'lname' => 'Ivic']);
+            //$model->save();
+            $user = User::find(49);
+            print_r($user->attributes);
+            $user->fname = "Ivana";
+            $user->lname = "Ivic";
+            $user->update();
+            $user = User::find(49);
+            print_r($user->attributes);
+            $response->setContent($content);
+            $response->setResponseCode(HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+        }catch(Exception $e){
+            $response->setContent(null);
+            $response->setResponseCode(HttpStatusCode::NOT_FOUND->name, HttpStatusCode::NOT_FOUND->value);
+            echo $e->getMessage();
         }
-    
+       
         return $response;
     }
 
     public function indexJsonAction(?string $params = null) : JsonResponse {
         $content = ["name" => "Andjela", "params" => $params];
-        
-        return new JsonResponse($content, HttpStatusCode::OK->value, HttpStatusCode::OK->name);
-    }
 
-    private function loadDb() : Connection|null {
         try{
-            $connection = Connection::getInstance($_ENV['DB_URL'], $_ENV['DB_USER'], $_ENV['DB_PASSWD']);
-            echo $_ENV['DB_URL'];
-            echo "Succesfully connected";
-            return $connection;
-        } catch (Exception $e){
-            log($e->getMessage());
-            return null;
+            //$model = new User(['fname' => 'Jelena', 'lname' => 'F']);
+            //$model->save();
+            $user = User::find(50);
+            //print_r($user->attributes);
+            return new JsonResponse($content, HttpStatusCode::OK->value, HttpStatusCode::OK->name);
+        }catch(Exception $e){
+            echo $e->getMessage();
+            return new JsonResponse(null, HttpStatusCode::NOT_FOUND->value, HttpStatusCode::NOT_FOUND->name);
         }
     }
-
  }
