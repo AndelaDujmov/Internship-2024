@@ -52,6 +52,13 @@ class Model {
         return null;
     }
 
+    public static function findAll() : array {
+        $instance = new static();
+
+        return $instance->db->findAll($instance->table);
+    }
+
+
     public function toArray() : array {
         return $this->attributes;  
         

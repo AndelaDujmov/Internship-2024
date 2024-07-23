@@ -38,7 +38,8 @@ class Router{
 
                 $response = call_user_func_array([$instance, $method], $parameters);
                
-                return $response->send();
+                if ($response)
+                    return $response->send();
             }
         }
         return null;

@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\config\TwigConfig;
 use App\Connection\Connection;
 use App\Http\HttpStatusCode;
 use App\Model\User;
@@ -18,11 +19,12 @@ class IndexController {
         Dotenv::createImmutable(__DIR__ . '/../../')->load();
     }
 
-    public function indexAction(?string $content = null, string $message, int $code) : Response {
+    public function indexAction(string $template, mixed $data, string $message, int $code) : Response {
         $response =  Response::getInstance();
+        $twig = new TwigConfig();
         $response->setHeaders('Content-Type: text/html');
-        $response->setContent($content);
         $response->setResponseCode($message, $code);
+        $response->renderTwig($twig, $template, $data);
        
         return $response;
     }

@@ -143,6 +143,15 @@ class Connection{
         return $result ?? null;
     }
 
+    public function findAll(string $tableName) : array {
+        $query = "SELECT * FROM $this->dbname.$tableName;";
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        var_dump($result);
+        return $result ?? [];
+    }
+
     private function execute(string $query, array $params = []) : PDOStatement {
         $pdoStatement = $this->dbh->prepare($query);
         

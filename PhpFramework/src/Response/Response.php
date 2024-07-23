@@ -15,9 +15,7 @@ class Response implements ResponseInterface{
     }
 
     public function send() : string {
-        $twig = new TwigConfig();
-
-        return $twig->render('httpResponse.html.twig', ["headers" => $this->headers, "status" => $this->responseCode . ' ' . $this->responseText, "content" => $this->content]);
+        return $this->content;
     }
 
     public function setContent(string|array|null $content) : void {
@@ -39,6 +37,10 @@ class Response implements ResponseInterface{
 
     public function getResponse() : array {
         return [$this->headers, $this->responseCode, $this->responseText, $this->content];
+    }
+
+    public function renderTwig(TwigConfig $twig, string $template, array $data = []) : void {
+        $this->content = $twig->render($template, $data);
     }
 
 }

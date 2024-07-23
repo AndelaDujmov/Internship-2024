@@ -6,7 +6,7 @@ use App\Router\Router;
 
 require 'vendor/autoload.php';
 include 'routes.php';
-
+/*
 $findUser = new Request(HttpMethod::GET->value ,"/find/user/6");
 $user = Router::resolver($findUser);
 print_r($user);
@@ -22,3 +22,8 @@ print_r($add);
 $updateUsr = new Request(HttpMethod::POST->value ,"/edit/user/46");
 $update = Router::resolver($updateUsr);
 print_r($update);
+*/
+$showAll = new Request(HttpMethod::GET->value ,"/show/all");
+var_dump($showAll);
+$all = Router::resolver($showAll);
+print_r($all);
