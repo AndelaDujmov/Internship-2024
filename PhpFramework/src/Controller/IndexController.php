@@ -18,46 +18,21 @@ class IndexController {
         Dotenv::createImmutable(__DIR__ . '/../../')->load();
     }
 
-    public function indexAction(?string $params = null) : Response {
-       
+    public function indexAction(?string $content = null, string $message, int $code) : Response {
         $response =  Response::getInstance();
         $response->setHeaders('Content-Type: text/html');
-
-        $content = ["name" => "Andjela", "params" => $params];
-        try{
-            $model = new User(['fname' => 'Iva', 'lname' => 'Ivic']);
-            $model->save();
-            $user = User::find(10);
-            print_r($user->attributes);
-            $user->fname = "Jela";
-            $user->lname = "Jelic";
-            $user->update();
-            $user2 = User::find(23);
-            $user2->softDelete();
-            $user2->delete();
-            print_r($user->attributes);
-            $response->setContent($content);
-            $response->setResponseCode(HttpStatusCode::OK->name, HttpStatusCode::OK->value);
-        }catch(Exception $e){
-            $response->setContent(null);
-            $response->setResponseCode(HttpStatusCode::NOT_FOUND->name, HttpStatusCode::NOT_FOUND->value);
-            echo $e->getMessage();
-        }
+        $response->setContent($content);
+        $response->setResponseCode($message, $code);
        
         return $response;
     }
 
-    public function indexJsonAction(?string $params = null) : JsonResponse {
-        $content = ["name" => "Andjela", "params" => $params];
-
-        try{
-            $model = new User(['fname' => 'Jelena', 'lname' => 'F']);
-            $model->save();
-            $user = User::find(50);
-            return new JsonResponse($content, HttpStatusCode::OK->value, HttpStatusCode::OK->name);
-        }catch(Exception $e){
-            echo $e->getMessage();
-            return new JsonResponse(null, HttpStatusCode::NOT_FOUND->value, HttpStatusCode::NOT_FOUND->name);
-        }
+    public function indexJsonAction(?string $content = null, string $message, int $code) : JsonResponse {
+        $response =  JsonResponse::getInstance();
+        $response->setHeaders('Content-Type: application/json');
+        $response->setContent($content);
+        $response->setResponseCode($message, $code);
+       
+        return $response;
     }
  }
