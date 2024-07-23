@@ -19,7 +19,7 @@ print_r($dlt);
 $addUser = new Request(HttpMethod::POST->value ,"/add/user");
 $add = Router::resolver($addUser);
 print_r($add);
-$updateUsr = new Request(HttpMethod::PgOST->value ,"/edit/user/46");
+$updateUsr = new Request(HttpMethod::POST->value ,"/edit/user/46");
 $update = Router::resolver($updateUsr);
 print_r($update);
 $showAll = new Request(HttpMethod::GET->value ,"/show/all");

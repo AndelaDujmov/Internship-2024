@@ -23,29 +23,24 @@ class UserController extends IndexController {
         return $this->indexAction('allUsers.html.twig', ['users' => null], HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
     }
 
-    /*
     public function addNewUser() : Response {
-        $content = ['fname' => 'Mario', 'lname' => 'Maric'];
-        $user = new User($content);
-        $user->save();
+        $response = Response::getInstance();
+        $twig = new TwigConfig();
 
-        if ($user){
-            return $this->indexAction('Created', HttpStatusCode::OK->name, HttpStatusCode::OK->value);
-        }
-        return $this->indexAction('Unable to create.', HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
+        $response->renderTwig($twig, 'createUser.html.twig');
+
+        return $response;
     }
 
     public function editUser($id) : Response  {
         $user = User::find(intval($id));
-        $user->fname = "Marko";
-        $user->lname = "Icic";
-        $user->update();
-
+        
         if ($user){
-            return $this->indexAction('Edited', HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+            return $this->indexAction('editUser.html.twig', ['fname' => $user->fname, 'lname' => $user->lname], HttpStatusCode::OK->name, HttpStatusCode::OK->value);
         }
-        return $this->indexAction('Unable to edit.', HttpStatusCode::BAD_REQUEST->name, HttpStatusCode::BAD_REQUEST->value);
-    }*/
+        return $this->indexAction('editUser.html.twig', ['fname' => null, 'lname' => null], HttpStatusCode::OK->name, HttpStatusCode::OK->value);
+
+    }
 
     public function findUser($id) : Response {
         $user = User::find(intval($id));

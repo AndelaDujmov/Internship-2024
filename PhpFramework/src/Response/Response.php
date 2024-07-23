@@ -39,8 +39,8 @@ class Response implements ResponseInterface{
         return [$this->headers, $this->responseCode, $this->responseText, $this->content];
     }
 
-    public function renderTwig(TwigConfig $twig, string $template, array $data = []) : void {
-        $this->content = $twig->render($template, $data);
+    public function renderTwig(TwigConfig $twig, string $template, ?array $data = []) : void {
+        $this->content = $twig->render($template, $data ?? null);
     }
 
 }
