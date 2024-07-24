@@ -15,4 +15,7 @@ The schema has entities: Worker, Annual Leave, Team, Approver (as Team Leader or
 
 ![Wireframe Sketch](src/schema/wireframe-project-template%202%20sketches%20(Community).jpg)
 
+<br>
+
+**Wireframe :** /src/schema/
 
