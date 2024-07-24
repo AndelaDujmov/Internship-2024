@@ -58,7 +58,7 @@ After installation it is needed to restart web server to load new extension.
 
 **Runtime Configuration :** <br>
 
-After the installation update the php.ini file with extension: *extension=pdo.so*
+After the installation update the php.ini file with extension: *extension=pdo.*
 
 
 
