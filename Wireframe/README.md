@@ -59,3 +59,21 @@ To run the application i had to position to my current directory and run command
 ```bash
     symfony server:start
 ```
+
+### Installing Packages
+
+For automated setup for managing Symfony projects and their dependencies more efficiently i used Symfony Flex. <br>
+
+Installation: <br>
+
+```bash
+    composer require symfony/flex
+```
+
+## Http Kernel
+
+Installation: <br>
+
+```bash
+    composer require symfony/http-kernel
+```
