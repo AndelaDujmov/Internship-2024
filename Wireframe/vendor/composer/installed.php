@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'andela/php-framework',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => 'ecceb4f5db740b4156568caf1d426e9eb77b0c58',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '859a2d8657981f4f6a9a691b72ef14a046e18d1a',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'andela/php-framework' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => 'ecceb4f5db740b4156568caf1d426e9eb77b0c58',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '859a2d8657981f4f6a9a691b72ef14a046e18d1a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
