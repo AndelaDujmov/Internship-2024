@@ -84,6 +84,22 @@ Installation: <br>
     composer require symfony/http-kernel
 ```
 
+## Doctrine
+
+Installation <br>
+
+```bash
+    composer require symfony/orm-pack
+```
+<br>
+
+Entity creation: <br>
+
+```bash
+    php bin/console make:entity
+```
+
 ## Project Details
 
-**Models** : /src/Models
+**Entity dir :** src/Entity
+**Repositories dir :** src/Repository
