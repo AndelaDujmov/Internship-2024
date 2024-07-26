@@ -25,8 +25,6 @@ The schema has entities: Worker, Annual Leave, Team, Approver (as Team Leader or
 
 <br>
 
-Creating a new Symphony project. <br>
-
 Downloading Symfony CLI:
 <br>
 
@@ -84,4 +82,4 @@ Installation: <br>
 
 ```bash
     composer require symfony/http-kernel
-```
+```...
