@@ -4,7 +4,7 @@
 
 <br>
 
-![ER Dijagram](src/schema/AnnualLeaveSchema.drawio.png)
+![ER Dijagram](schemas/AnnualLeaveSchema.drawio.png)
 <br>
 
 The schema has entities: Worker, Annual Leave, Team, Approver (as Team Leader or Project Leader), Leader Team and Request for Annual Leave. <br>
@@ -13,7 +13,7 @@ The schema has entities: Worker, Annual Leave, Team, Approver (as Team Leader or
 
 ## Wireframe
 
-![Wireframe Sketch](src/schema/wireframe-project-template%202%20sketches%20(Community).jpg)
+![Wireframe Sketch](schemas/wireframe-project-template%202%20sketches%20(Community).jpg) 
 
 <br>
 
@@ -82,4 +82,8 @@ Installation: <br>
 
 ```bash
     composer require symfony/http-kernel
-```...
+```
+
+## Project Details
+
+**Models** : /src/Models
