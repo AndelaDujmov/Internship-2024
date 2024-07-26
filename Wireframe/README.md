@@ -99,6 +99,24 @@ Entity creation: <br>
     php bin/console make:entity
 ```
 
+Relations creation: <br>
+
+```bash
+    php bin/console make:entity
+
+    # in the console select created entity eg. AnnualLeave
+
+    #as property name write the table's name we want a relationship with
+
+    #field type: relation
+
+    #at the end write the table you want a relation with as well as relation type
+
+    ## Do you want to add a new property to Worker so that you can access/update AnnualLeave objects from it - e.g. $worker->getAnnualLeaves()? (yes/no) - yes
+
+    
+```
+
 ## Project Details
 
 **Entity dir :** src/Entity
