@@ -25,7 +25,7 @@ The schema has entities: Worker, Annual Leave, Team, Approver (as Team Leader or
 
 <br>
 
-I already have a project so i will be configuring Symfony on already existing project. <br>
+Creating a new Symphony project. <br>
 
 Downloading Symfony CLI:
 <br>
@@ -50,6 +50,14 @@ since i use Linux i had to add the Symfony CLI binary path to the shell configur
 
     #check version and confirm the installation was successful
     symfony -v
+```
+
+<br>
+
+Creating a Symfony 7.1 project:
+
+```bash
+   symfony new . --version="7.1.*" --webapp
 ```
 
 ### Running Symfony Applications
