@@ -4,15 +4,19 @@ namespace App\Entity;
 
 use App\Repository\AnnualLeaveRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\Date;
 
 #[ORM\Entity(repositoryClass: AnnualLeaveRepository::class)]
 class AnnualLeave
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
+
     #[ORM\Column]
     private ?int $year = null;
     
@@ -25,11 +29,8 @@ class AnnualLeave
 
     #[ORM\Column(length: 20)]
     private ?string $month = null;
-    #[ORM\Column]
 
-
-
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -37,6 +38,13 @@ class AnnualLeave
     public function getYear(): ?int
     {
         return $this->year;
+    }
+
+    public function setYear(?int $year): static
+    {
+        $this->year = $year;
+
+        return $this;
     }
 
     public function getWorker(): ?Worker

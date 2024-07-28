@@ -3,7 +3,7 @@
         'name' => 'andela/php-framework',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'ecceb4f5db740b4156568caf1d426e9eb77b0c58',
+        'reference' => '07c5a4828ad8a6e883dc27a6846b129801a6ad61',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'andela/php-framework' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ecceb4f5db740b4156568caf1d426e9eb77b0c58',
+            'reference' => '07c5a4828ad8a6e883dc27a6846b129801a6ad61',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -1,0 +1,10 @@
+{
+    "require": {
+        "symfony/flex": "^2.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true
+        }
+    }
+}
