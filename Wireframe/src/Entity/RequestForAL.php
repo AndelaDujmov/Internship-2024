@@ -20,10 +20,6 @@ class RequestForAL
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Worker $worker = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $start = null;
 
@@ -37,30 +33,22 @@ class RequestForAL
      */
     private Status $status;
 
-    #[ORM\ManyToOne]
-    private ?Leader $teamLeadApprove = null;
-
-    #[ORM\ManyToOne]
-    private ?Leader $projectLeadApproveal = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateOfProcessing = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $worker = null;
+
+    #[ORM\ManyToOne]
+    private ?User $teamLeader = null;
+
+    #[ORM\ManyToOne]
+    private ?User $projectLeader = null;
 
     public function getId(): ?string
     {
         return $this->id;
-    }
-
-    public function getWorker(): ?Worker
-    {
-        return $this->worker;
-    }
-
-    public function setWorker(?Worker $worker): static
-    {
-        $this->worker = $worker;
-
-        return $this;
     }
 
     public function getStart(): ?\DateTimeInterface
@@ -109,30 +97,6 @@ class RequestForAL
         $this->status = $status;
     }
 
-    public function getTeamLeadApprove(): ?Leader
-    {
-        return $this->teamLeadApprove;
-    }
-
-    public function setTeamLeadApprove(?Leader $teamLeadApprove): static
-    {
-        $this->teamLeadApprove = $teamLeadApprove;
-
-        return $this;
-    }
-
-    public function getProjectLeadApproveal(): ?Leader
-    {
-        return $this->projectLeadApproveal;
-    }
-
-    public function setProjectLeadApproveal(?Leader $projectLeadApproveal): static
-    {
-        $this->projectLeadApproveal = $projectLeadApproveal;
-
-        return $this;
-    }
-
     public function getDateOfProcessing(): ?\DateTimeInterface
     {
         return $this->dateOfProcessing;
@@ -141,6 +105,42 @@ class RequestForAL
     public function setDateOfProcessing(\DateTimeInterface $dateOfProcessing): static
     {
         $this->dateOfProcessing = $dateOfProcessing;
+
+        return $this;
+    }
+
+    public function getWorker(): ?User
+    {
+        return $this->worker;
+    }
+
+    public function setWorker(?User $worker): static
+    {
+        $this->worker = $worker;
+
+        return $this;
+    }
+
+    public function getTeamLeader(): ?User
+    {
+        return $this->teamLeader;
+    }
+
+    public function setTeamLeader(?User $teamLeader): static
+    {
+        $this->teamLeader = $teamLeader;
+
+        return $this;
+    }
+
+    public function getProjectLeader(): ?User
+    {
+        return $this->projectLeader;
+    }
+
+    public function setProjectLeader(?User $projectLeader): static
+    {
+        $this->projectLeader = $projectLeader;
 
         return $this;
     }

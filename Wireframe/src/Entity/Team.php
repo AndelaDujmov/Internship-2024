@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TeamRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
@@ -20,8 +22,16 @@ class Team
     #[ORM\Column(length: 40)]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?int $memberNumber = null;
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'team')]
+    private Collection $members;
+
+    public function __construct()
+    {
+        $this->members = new ArrayCollection();
+    }
 
     public function getId(): ?Uuid
     {
@@ -40,15 +50,34 @@ class Team
         return $this;
     }
 
-    public function getMemberNumber(): ?int
+    /**
+     * @return Collection<int, User>
+     */
+    public function getMembers(): Collection
     {
-        return $this->memberNumber;
+        return $this->members;
     }
 
-    public function setMemberNumber(int $memberNumber): static
+    public function addMember(User $member): static
     {
-        $this->memberNumber = $memberNumber;
+        if (!$this->members->contains($member)) {
+            $this->members->add($member);
+            $member->setTeam($this);
+        }
 
         return $this;
     }
+
+    public function removeMember(User $member): static
+    {
+        if ($this->members->removeElement($member)) {
+            // set the owning side to null (unless already changed)
+            if ($member->getTeam() === $this) {
+                $member->setTeam(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

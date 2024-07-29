@@ -4,7 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\AnnualLeave;
 use App\Entity\RequestForAL;
+use App\Entity\Role;
 use App\Entity\Team;
+use App\Entity\User;
 use App\Entity\Worker;
 use App\Enum\Status;
 use DateTime;
@@ -15,16 +17,18 @@ class TeamFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        
-        for ($i = 1; $i < 3; $i++) {
-            $team = new Team();
-            $team->setMemberNumber(mt_rand(1, 6));
-            $team->setName("Team " . (string)($i));
 
-            $worker = new Worker();
+        $role = new Role();
+        $role->setName("Worker");
+        for ($i = 1; $i < 3; $i++) {
+            $worker = new User();
             $worker->setName("Worker Name" . (string)($i));
             $worker->setSurname("Worker Surname" . (string)($i));
-            $worker->setTeam($team);
+            $worker->setRole($role);
+
+            $team = new Team();
+            $team->addMember($worker);
+            $team->setName("Team " . (string)($i));
 
             $al = new AnnualLeave();
             $al->setMonth("Month " . (string)($i));
@@ -37,12 +41,13 @@ class TeamFixture extends Fixture
             $date = new DateTime();
             $alRequest->setEnd($date->modify('+1 week'));
             $alRequest->setStatus(Status::PENDING);
-            $alRequest->setTeamLeadApprove(null);
-            $alRequest->setProjectLeadApproveal(null);
+            $alRequest->setTeamLeader(null);
+            $alRequest->setProjectLeader(null);
             $alRequest->setWorker($worker);
             $alRequest->setDateOfProcessing(new DateTime());
-            $alRequest->setReason("idk");
+            $alRequest->setReason("idk");  
 
+            $manager->persist($role);
             $manager->persist($team);
             $manager->persist($worker);
             $manager->persist($al);

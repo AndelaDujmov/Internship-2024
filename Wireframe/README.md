@@ -147,6 +147,15 @@ Creation of new fixture: <br>
     php bin/console make:fixture
 ```
 
+<br>
+
+Load fixture into database:
+<br>
+
+```bash
+    php bin/console doctrine:fixtures:load
+```
+
 ## Project Details
 
 **Entity dir :** src/Entity

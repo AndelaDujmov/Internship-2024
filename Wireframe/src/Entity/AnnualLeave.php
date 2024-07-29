@@ -20,15 +20,15 @@ class AnnualLeave
     #[ORM\Column]
     private ?int $year = null;
     
-    #[ORM\ManyToOne(inversedBy: 'annualLeaves')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Worker $worker = null;
-
     #[ORM\Column]
     private ?int $totalDays = null;
 
     #[ORM\Column(length: 20)]
     private ?string $month = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $worker = null;
 
     public function getId(): ?Uuid
     {
@@ -43,18 +43,6 @@ class AnnualLeave
     public function setYear(?int $year): static
     {
         $this->year = $year;
-
-        return $this;
-    }
-
-    public function getWorker(): ?Worker
-    {
-        return $this->worker;
-    }
-
-    public function setWorker(?Worker $worker): static
-    {
-        $this->worker = $worker;
 
         return $this;
     }
@@ -79,6 +67,18 @@ class AnnualLeave
     public function setMonth(string $month): static
     {
         $this->month = $month;
+
+        return $this;
+    }
+
+    public function getWorker(): ?User
+    {
+        return $this->worker;
+    }
+
+    public function setWorker(?User $user): static
+    {
+        $this->worker = $user;
 
         return $this;
     }

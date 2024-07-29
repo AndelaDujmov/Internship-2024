@@ -18,43 +18,19 @@ class TeamLeaders
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Leader $projectLeader = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Leader $teamLeader = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Team $team = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $projectLeader = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $teamLead = null;
 
     public function getId(): ?Uuid
     {
         return $this->id;
-    }
-
-    public function getProjectLeader(): ?Leader
-    {
-        return $this->projectLeader;
-    }
-
-    public function setProjectLeader(?Leader $projectLeader): static
-    {
-        $this->projectLeader = $projectLeader;
-
-        return $this;
-    }
-
-    public function getTeamLeader(): ?Leader
-    {
-        return $this->teamLeader;
-    }
-
-    public function setTeamLeader(?Leader $teamLeader): static
-    {
-        $this->teamLeader = $teamLeader;
-
-        return $this;
     }
 
     public function getTeam(): ?Team
@@ -65,6 +41,30 @@ class TeamLeaders
     public function setTeam(?Team $team): static
     {
         $this->team = $team;
+
+        return $this;
+    }
+
+    public function getProjectLeader(): ?User
+    {
+        return $this->projectLeader;
+    }
+
+    public function setProjectLeader(?User $projectLeader): static
+    {
+        $this->projectLeader = $projectLeader;
+
+        return $this;
+    }
+
+    public function getTeamLead(): ?User
+    {
+        return $this->teamLead;
+    }
+
+    public function setTeamLead(?User $teamLead): static
+    {
+        $this->teamLead = $teamLead;
 
         return $this;
     }
