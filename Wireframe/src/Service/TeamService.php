@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Team;
 use App\Repository\TeamRepository;
 
 class TeamService {
@@ -12,12 +13,12 @@ class TeamService {
         $this->teamRepository = $teamRepository;
     }
 
-    public function getAll() {
-        return $this->teamRepository->getAll();
+    public function getAll() : array {
+        return $this->teamRepository->findAll();
     }
 
-    public function getById($id) {
-        return $this->teamRepository->getById($id);
+    public function getById(mixed $id) : ?Team {
+        return $this->teamRepository->find($id);
     }
 
 }
