@@ -11,11 +11,10 @@ use Symfony\Component\Validator\Constraints\Date;
 #[ORM\Entity(repositoryClass: AnnualLeaveRepository::class)]
 class AnnualLeave
 {
+   
     #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    #[ORM\Column(type: 'string', length: 36, unique: true)]
+    private ?string $id = null;
 
     #[ORM\Column]
     private ?int $year = null;
@@ -30,7 +29,13 @@ class AnnualLeave
     #[ORM\JoinColumn(nullable: false)]
     private ?User $worker = null;
 
-    public function getId(): ?Uuid
+    public function __construct() {
+        if ($this->id === null) {
+            $this->id = Uuid::v4()->toRfc4122();
+        }
+    }
+
+    public function getId(): ?string
     {
         return $this->id;
     }

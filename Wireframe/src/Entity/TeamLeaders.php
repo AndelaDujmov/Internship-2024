@@ -10,11 +10,10 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: TeamLeadersRepository::class)]
 class TeamLeaders 
 {
+    
     #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?UuidType $id = null;
+    #[ORM\Column(type: 'string', length: 36, unique: true)]
+    private ?string $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -28,7 +27,13 @@ class TeamLeaders
     #[ORM\JoinColumn(nullable: false)]
     private ?User $teamLead = null;
 
-    public function getId(): ?Uuid
+    public function __construct() {
+        if ($this->id === null) {
+            $this->id = Uuid::v4()->toRfc4122();
+        }
+    }
+
+    public function getId(): ?string
     {
         return $this->id;
     }

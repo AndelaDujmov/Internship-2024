@@ -13,12 +13,11 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: RequestForALRepository::class)]
 class RequestForAL
-{
+{ 
+    
     #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    #[ORM\Column(type: 'string', length: 36, unique: true)]
+   private ?string $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $start = null;
@@ -45,6 +44,12 @@ class RequestForAL
 
     #[ORM\ManyToOne]
     private ?User $projectLeader = null;
+
+    public function __construct() {
+        if ($this->id === null) {
+            $this->id = Uuid::v4()->toRfc4122();
+        }
+    }
 
     public function getId(): ?string
     {

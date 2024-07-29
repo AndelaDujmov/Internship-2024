@@ -14,10 +14,8 @@ class Team
 {
 
     #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    #[ORM\Column(type: 'string', length: 36, unique: true)]
+    private ?string $id = null;
 
     #[ORM\Column(length: 40)]
     private ?string $name = null;
@@ -31,9 +29,12 @@ class Team
     public function __construct()
     {
         $this->members = new ArrayCollection();
+        if ($this->id === null) {
+            $this->id = Uuid::v4()->toRfc4122();
+        }
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?string
     {
         return $this->id;
     }

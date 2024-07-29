@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Team;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Team>
@@ -14,6 +15,21 @@ class TeamRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Team::class);
+    }
+
+    public function findAll(): array {
+        return $this->findAll()
+        ;
+    }
+
+    public function findOneById(Uuid $id): ?Team
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     //    /**
