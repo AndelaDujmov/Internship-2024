@@ -16,6 +16,24 @@ class RequestForALRepository extends ServiceEntityRepository
         parent::__construct($registry, RequestForAL::class);
     }
 
+    public function create(RequestForAL $requestForAL){
+        $em = $this->getEntityManager();
+        $em->persist($requestForAL);
+        $em->flush();
+    }
+
+    public function update(RequestForAL $requestForAL){
+        $em = $this->getEntityManager();
+        $em->persist($requestForAL);
+        $em->flush();
+    }
+
+    public function delete(RequestForAL $requestForAL){
+        $em = $this->getEntityManager();
+        $em->remove($requestForAL);
+        $em->flush();
+    }
+
     //    /**
     //     * @return RequestForAL[] Returns an array of RequestForAL objects
     //     */

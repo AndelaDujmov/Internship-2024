@@ -16,6 +16,24 @@ class AnnualLeaveRepository extends ServiceEntityRepository
         parent::__construct($registry, AnnualLeave::class);
     }
 
+    public function create(AnnualLeave $annualLeave): void {
+        $em = $this->getEntityManager();
+        $em->persist($annualLeave);
+        $em->flush();
+    }
+
+    public function update(AnnualLeave $annualLeave): void {
+        $em = $this->getEntityManager();
+        $em->persist($annualLeave);
+        $em->flush();
+    }
+
+    public function remove(AnnualLeave $annualLeave): void {
+        $em = $this->getEntityManager();
+        $em->remove($annualLeave);
+        $em->flush();
+    }
+
 //    /**
 //     * @return AnnualLeave[] Returns an array of AnnualLeave objects
 //     */

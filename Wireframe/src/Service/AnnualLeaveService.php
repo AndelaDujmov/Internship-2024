@@ -24,5 +24,9 @@ class AnnualLeaveService {
     public function findById(mixed $id) : ?RequestForAL {
         return $this->requestForALRepository->find($id);
     }
+
+    public function createRequest(RequestForAL $requestForAL) : void {
+        
+    }
     
 }

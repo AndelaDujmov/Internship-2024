@@ -17,6 +17,24 @@ class TeamRepository extends ServiceEntityRepository
         parent::__construct($registry, Team::class);
     }
 
+    public function create(Team $team): void {
+        $em = $this->getEntityManager();
+        $em->persist($team);
+        $em->flush();
+    }
+
+    public function update(Team $team): void {
+        $em = $this->getEntityManager();
+        $em->persist($team);
+        $em->flush();
+    }
+
+    public function remove(Team $team): void {
+        $em = $this->getEntityManager();
+        $em->remove($team);
+        $em->flush();
+    }
+
     //    /**
     //     * @return Team[] Returns an array of Team objects
     //     */
