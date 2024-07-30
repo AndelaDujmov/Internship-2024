@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Team;
 use App\Entity\TeamLeaders;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,6 +17,11 @@ class TeamLeadersRepository extends ServiceEntityRepository
         parent::__construct($registry, TeamLeaders::class);
     }
 
+    public function addLeaders(Team $team) : void {
+
+    }
+
+    
     //    /**
     //     * @return TeamLeaders[] Returns an array of TeamLeaders objects
     //     */

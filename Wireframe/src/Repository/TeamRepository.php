@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Team;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
@@ -32,6 +33,27 @@ class TeamRepository extends ServiceEntityRepository
     public function remove(Team $team): void {
         $em = $this->getEntityManager();
         $em->remove($team);
+        $em->flush();
+    }
+
+    public function showAllWorkers(Team $team): array {
+        $em = $this->getEntityManager();
+        return $team->getMembers()->toArray();
+    }
+
+    public function addWorkerToTeam(User $worker, Team $team) : void {
+        $team->addMember($worker);
+        $em = $this->getEntityManager();
+        $em->persist($team);
+        $em->persist($worker);
+        $em->flush();
+    }
+
+    public function removeWorkerToTeam(User $worker, Team $team) : void {
+        $team->removeMember($worker);
+        $em = $this->getEntityManager();
+        $em->persist($team);
+        $em->persist($worker);
         $em->flush();
     }
 

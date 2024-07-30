@@ -9,11 +9,9 @@ use App\Repository\UserRepository;
 class UserManagementService {
 
     private $userRepository;
-    private $roleRepository;
 
-    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository) {
+    public function __construct(UserRepository $userRepository) {
         $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
     }
 
     public function getUsers() : array {

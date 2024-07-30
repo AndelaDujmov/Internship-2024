@@ -4,6 +4,7 @@ namespace App\Tests\Unit;
 
 use App\Entity\Team;
 use App\Repository\TeamRepository;
+use App\Repository\UserRepository;
 use App\Service\TeamService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,10 +14,12 @@ class TeamServiceUnitTest extends TestCase {
 
     protected $teamService;
     protected $teamRepository;
+    protected $userRepository;
  
     protected function setUp(): void {
         $this->teamRepository = $this->createMock(TeamRepository::class);
-        $this->teamService = new TeamService($this->teamRepository);
+        $this->userRepository = $this->createMock(UserRepository::class);
+        $this->teamService = new TeamService($this->teamRepository, $this->userRepository);
     }
 
     public function testGetAllTeams() : void {
@@ -45,4 +48,15 @@ class TeamServiceUnitTest extends TestCase {
         $this->assertEquals($team, $teamServ);
     }
 
+    public function testCreateTeam() : void {
+        $team = (new Team())->setName("Team 1");
+
+        $this->teamRepository->method("create")
+            ->with($team);
+
+        $teamToCreate = new Team();
+        $teamToCreate->setName("Team 1");
+        $this->teamRepository->create($teamToCreate);
+    }
+    
 }

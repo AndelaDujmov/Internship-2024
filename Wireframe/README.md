@@ -156,8 +156,31 @@ Load fixture into database:
     php bin/console doctrine:fixtures:load
 ```
 
+### Unit Testing - PHPUnit
+
+Used for testing services functionality.
+
+Installation: <br>
+
+```bash
+    composer require --dev phpunit/phpunit
+
+    #for running tests:
+
+    php bin/phpunit
+```
+
+### SecurityBundle
+
+Installation: <br>
+
+```bash
+    composer require symfony/security-bundle
+```
+
 ## Project Details
 
-**Entity dir :** src/Entity
-**Repositories dir :** src/Repository
-**Migrations dir :** src/migrations
+**Entity dir :** src/Entity <br>
+**Repositories dir :** src/Repository <br>
+**Migrations dir :** src/migrations <br>
+**Unit Tests dir :** tests/Unit <br>
