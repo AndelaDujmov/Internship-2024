@@ -30,7 +30,7 @@ class RequestForAL
       /**
      * @ORM\Column(type="string", length=20)
      */
-    private Status $status;
+    private string $status;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateOfProcessing = null;
@@ -92,12 +92,12 @@ class RequestForAL
         return $this;
     }
 
-    public function getStatus(): Status
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function setStatus(Status $status): void
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }

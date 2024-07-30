@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AnnualLeave;
+use App\Entity\RequestForAL;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -33,6 +34,23 @@ class AnnualLeaveRepository extends ServiceEntityRepository
         $em->remove($annualLeave);
         $em->flush();
     }
+
+    public function getALBy(?string $user=null, ?string $month=null, ?string $year=null): array|AnnualLeave {
+        $criteria = [];
+
+        if ($user !== null) 
+            $criteria['worker_id'] = $user;
+
+        if ($month !== null) 
+            $criteria['month'] = $month;
+        
+        if ($year !== null)
+            $criteria['year'] = $year;
+
+        return $this->findBy($criteria);
+    }
+
+    public function getLast
 
 //    /**
 //     * @return AnnualLeave[] Returns an array of AnnualLeave objects

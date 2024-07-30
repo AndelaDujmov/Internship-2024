@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Team;
 use App\Entity\TeamLeaders;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,8 +18,23 @@ class TeamLeadersRepository extends ServiceEntityRepository
         parent::__construct($registry, TeamLeaders::class);
     }
 
-    public function addLeaders(Team $team) : void {
+    public function showLeaders(Team $team, ?string $role = null) : array {
+        return $this->findBy(['team_id' => $team->getId()]);
+    }
 
+    public function addLeaders(Team $team, ?User $teamLeader, ?User $projectLeader) : void {
+        $teamLeaders = new TeamLeaders();
+        $teamLeaders->setTeam($team);
+        $teamLeaders->setTeamLead($teamLeader);
+        $teamLeaders->setProjectLeader($projectLeader);
+    }
+
+    public function addLeader(TeamLeaders $teamLeaders, ?User $leader) : void {
+        if ($leader->hasRole(\App\Enum\Role::PROJECTLEADER->value)){
+            $teamLeaders->setProjectLeader($leader);
+        }else {
+            $teamLeaders->setTeamLead($leader);
+        }
     }
 
     

@@ -16,6 +16,10 @@ class RequestForALRepository extends ServiceEntityRepository
         parent::__construct($registry, RequestForAL::class);
     }
 
+    public function findById(string $id): RequestForAL|null {
+        return $this->find($id);
+    }
+
     public function create(RequestForAL $requestForAL){
         $em = $this->getEntityManager();
         $em->persist($requestForAL);

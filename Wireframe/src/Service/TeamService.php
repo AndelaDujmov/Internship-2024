@@ -24,25 +24,29 @@ class TeamService {
     public static function getAll() : array {
         $teams = self::$teamRepository->findAll();
 
-        return !$teams ? new \Exception("No teams found") : $teams;
+        return $teams ?: throw new \Exception("Teams not found");
     }
 
     public static function showAllTeammates(string $idTeam) : array {
         $team = self::$teamRepository->find($idTeam);
         $teammates = self::$teamRepository->showAllWorkers($team);
 
-        return !$teammates ? new \Exception("Team has no teammates") : $teammates;
+        return $teammates ?: throw new \Exception("Teammates not found");
     }
 
     public static function showLeaders(string $idTeam) : array {
         $team = self::$teamRepository->find($idTeam);
-        $team
+
+        if (!$team)
+            throw new \Exception("Team not found");
+
+        return self::$teamLeadersRepository->showLeaders($team) ?: throw new \Exception("No leaders found");
     }
 
     public function getById(mixed $id) : ?Team {
         $team = $this->teamRepository->find($id);
 
-        return !$team ? new \Exception("Team not found") : $team;
+        return $team ?: throw new \Exception("Team not found");
     }
 
     public function addWorkerToTeam(string $idUser, string $idTeam) : void {
