@@ -18,8 +18,8 @@ class TeamLeadersRepository extends ServiceEntityRepository
         parent::__construct($registry, TeamLeaders::class);
     }
 
-    public function showLeaders(Team $team, ?string $role = null) : array {
-        return $this->findBy(['team_id' => $team->getId()]);
+    public function showLeaders(Team $team) : array {
+        return $this->findBy(['team' => $team->getId()]);
     }
 
     public function addLeaders(Team $team, ?User $teamLeader, ?User $projectLeader) : void {

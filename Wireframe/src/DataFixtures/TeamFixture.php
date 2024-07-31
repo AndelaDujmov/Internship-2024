@@ -6,6 +6,7 @@ use App\Entity\AnnualLeave;
 use App\Entity\RequestForAL;
 use App\Entity\Role;
 use App\Entity\Team;
+use App\Entity\TeamLeaders;
 use App\Entity\User;
 use App\Entity\Worker;
 use App\Enum\Status;
@@ -17,41 +18,29 @@ class TeamFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        $teamLeader = new User();
+        $teamLeader->setUsername("TeamLeader1");
+        $teamLeader->setEmail("t1@gmail.com");
+        $teamLeader->setPassword("A1232131.");
+        $teamLeader->setRoles([\App\Enum\Role::TEAMLEADER->value]);
 
-        $role = new Role();
-        $role->setName("Worker");
         for ($i = 1; $i < 3; $i++) {
-            $worker = new User();
-            $worker->setName("Worker Name" . (string)($i));
-            $worker->setSurname("Worker Surname" . (string)($i));
-            $worker->setRole($role);
+            // $worker = new User();
+            // $worker->setUsername("Worker Name" . (string)($i));
+            // $worker->setEmail("worker" . (string)($i). "@gmail.com");
+            // $worker->setPassword("23454");
 
             $team = new Team();
-            $team->addMember($worker);
-            $team->setName("Team " . (string)($i));
-
-            $al = new AnnualLeave();
-            $al->setMonth("Month " . (string)($i));
-            $al->setYear(mt_rand(2023, 2025));
-            $al->setWorker($worker);
-            $al->setTotalDays(mt_rand(10, 30));
-
-            $alRequest = new RequestForAL();
-            $alRequest->setStart(new DateTime());
-            $date = new DateTime();
-            $alRequest->setEnd($date->modify('+1 week'));
-            $alRequest->setStatus(Status::PENDING);
-            $alRequest->setTeamLeader(null);
-            $alRequest->setProjectLeader(null);
-            $alRequest->setWorker($worker);
-            $alRequest->setDateOfProcessing(new DateTime());
-            $alRequest->setReason("idk");  
-
-            $manager->persist($role);
+            $teamLeaders = new TeamLeaders();
+            $team->setName("Team " . (string)($i));  
+            $teamLeaders->setTeam($team);
+            $teamLeaders->setTeamLead($teamLeader);
+            $teamLeaders->setProjectLeader($teamLeader);
+            
             $manager->persist($team);
-            $manager->persist($worker);
-            $manager->persist($al);
-            $manager->persist($alRequest);
+            $manager->persist($teamLeader);
+            $manager->persist($teamLeaders);
+      
         }
 
         $manager->flush();

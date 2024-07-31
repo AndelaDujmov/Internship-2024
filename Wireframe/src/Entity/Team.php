@@ -29,6 +29,9 @@ class Team
 
     public function __construct()
     {
+        if ($this->id === null) {
+            $this->id = Uuid::v4()->toRfc4122();
+        }
         $this->members = new ArrayCollection();
     }
 

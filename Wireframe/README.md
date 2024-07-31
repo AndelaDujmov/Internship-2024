@@ -145,6 +145,10 @@ Creation of new fixture: <br>
 
 ```bash
     php bin/console make:fixture
+
+    #run:
+    php bin/console doctrine:fixtures:load
+
 ```
 
 <br>

@@ -16,7 +16,7 @@ class TeamService {
     private $teamLeadersRepository;
 
     public function __construct(TeamRepository $teamRepository, UserRepository $userRepository, TeamLeadersRepository $teamLeadersRepository) {
-        $this->teamRepository = $teamRepository;
+        self::$teamRepository = $teamRepository;
         $this->userRepository = $userRepository;
         $this->teamLeadersRepository = $teamLeadersRepository;
     }
@@ -34,13 +34,13 @@ class TeamService {
         return $teammates ?: throw new \Exception("Teammates not found");
     }
 
-    public static function showLeaders(string $idTeam) : array {
+    public function showLeaders(string $idTeam) : array {
         $team = self::$teamRepository->find($idTeam);
 
         if (!$team)
             throw new \Exception("Team not found");
 
-        return self::$teamLeadersRepository->showLeaders($team) ?: throw new \Exception("No leaders found");
+        return $this->teamLeadersRepository->showLeaders($team) ?: throw new \Exception("No leaders found");
     }
 
     public function getById(mixed $id) : ?Team {
