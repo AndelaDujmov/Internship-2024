@@ -50,7 +50,11 @@ class AnnualLeaveRepository extends ServiceEntityRepository
         return $this->findBy($criteria);
     }
 
-    public function getLast
+    public function getTotalDaysPerUser(string $userId){
+        $annualLeaves = $this->findBy(['worker_id' => $userId]);
+
+         
+    }
 
 //    /**
 //     * @return AnnualLeave[] Returns an array of AnnualLeave objects

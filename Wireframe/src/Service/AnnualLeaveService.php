@@ -40,6 +40,7 @@ class AnnualLeaveService {
     }
 
     public function validateRequestForAL(string $requestId, ?string $teamLeadId=null, ?string $projectLeadId=null) : void {
+        $daysLeft = 
         $alRequest = $this->requestForALRepository->findById($requestId);
         $teamlead = $teamLeadId != null ? $this->userRepository->find($teamLeadId) : null;
         $projectlead = $projectLeadId != null ? $this->userRepository->find($projectLeadId) : null;
@@ -56,7 +57,9 @@ class AnnualLeaveService {
             $alRequest->setStatus(\App\Enum\Status::COMPLETED->value);
             $al = new AnnualLeave();
             $al->setWorker($alRequest->getWorker());
-            $al->setTotalDays($alRequest->getEnd()->diff($alRequest->getStart())->days);
+            $daysInAL = $alRequest->getEnd()->diff($alRequest->getStart())->days;
+            $al->setTotalDays($al->get);
+
         }
            
         
