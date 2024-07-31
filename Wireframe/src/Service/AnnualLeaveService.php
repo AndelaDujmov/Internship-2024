@@ -58,7 +58,7 @@ class AnnualLeaveService {
             $al = new AnnualLeave();
             $al->setWorker($alRequest->getWorker());
             $daysInAL = $alRequest->getEnd()->diff($alRequest->getStart())->days;
-            $al->setTotalDays($al->get);
+            #$al->setTotalDays($al->get);
 
         }
            

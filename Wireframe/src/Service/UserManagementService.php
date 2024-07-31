@@ -26,8 +26,8 @@ class UserManagementService {
         return $this->userRepository->findAllByRole($roleId);
     }
 
-    public function registrateUser(){
-
+    public function registrateUser(User $user){
+        
     }
 
     public function loginUser(){

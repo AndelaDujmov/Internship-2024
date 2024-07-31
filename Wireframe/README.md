@@ -178,6 +178,42 @@ Installation: <br>
     composer require symfony/security-bundle
 ```
 
+### Registration Form And Controller
+
+```bash
+    composer require symfonycasts/verify-email-
+    
+    #creating a registration form
+
+    php bin/console make:registration-form
+```
+
+### Login
+
+<br>
+
+Rate Limiter is a basic protection against brute force login attacks.
+
+Installation: <br>
+
+```bash
+    composer require symfony/rate-limiter
+```
+
+Configuration: <br>
+
+In security.yaml
+
+```bash
+    #in main firewall :
+
+     login_throttling:
+                max_attempts: 3          # per minute ...
+                # interval: '15 minutes' # ... or in a custom period
+
+    #which means that only 3 attempts can happen
+```
+
 ## Project Details
 
 **Entity dir :** src/Entity <br>
