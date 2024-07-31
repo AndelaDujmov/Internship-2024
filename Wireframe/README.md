@@ -174,6 +174,14 @@ Installation: <br>
     php bin/phpunit
 ```
 
+### Controller <br>
+
+Create a controller: <br>
+
+```bash
+    php bin/console make:controller
+```
+
 ### SecurityBundle
 
 Installation: <br>

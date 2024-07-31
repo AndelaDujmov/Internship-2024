@@ -41,7 +41,8 @@
             {% for leadteam in team %}
                 <div>
                     <h3>{{ leadteam.getTeam().getName() }}</h3>
-                    <p>{{ leadteam.getProjectLeader().getUsername() }}</p>
+                    <p>{{ leadteam.getProjectLeader().getUsername() }}</p><br>
+                    <p>{{ leadteam.getTeamLead().getUsername() }}</p>
                 </div>
             {% endfor %}
         </div>
