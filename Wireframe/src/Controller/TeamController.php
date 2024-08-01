@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Team;
 use App\Form\TeamFormType;
 use App\Service\TeamService;
-use App\Service\UserManagementService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,7 +48,9 @@ class TeamController extends AbstractController
 
     #[Route('/team/create', name:'app_team_create')]
     public function createTeam(Request $request): Response {
-        $form = $this->createForm(TeamFormType::class, new Team());
+        $team = new Team();
+        $form = $this->createForm(TeamFormType::class, $team);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
@@ -65,9 +66,35 @@ class TeamController extends AbstractController
                     'error' => $e->getMessage(),
                 ]);
             }
+    }
+
+        return $this->render('team/create.html.twig', [
+            'controller_name' => 'TeamController',
+            'form' => $form->createView(),
+        ]);
+}
+
+    #[Route('/team/create', name:'app_team_create_post', methods: ['POST'])]
+    public function createTeamPost(Request $request): Response {
+        $form = $this->createForm(TeamFormType::class, new Team());
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            $name = $data->getName();
+            $memberNumber = $data->getNumberOfMembers();
+
+            try {
+                $this->teamService->create($name, $memberNumber);
+                return $this->redirectToRoute('app_team');
+            } catch (\Exception $e) {
+                return $this->render('error/error.html.twig', [
+                    'controller_name' => 'TeamController',
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
-        return $this->render('team/members.html.twig', [
+        return $this->render('team/create.html.twig', [
             'controller_name' => 'TeamController',
             'form' => $form->createView(),
         ]);

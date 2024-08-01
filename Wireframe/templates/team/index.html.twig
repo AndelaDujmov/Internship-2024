@@ -60,9 +60,48 @@
         text-decoration: none;
         color: inherit;
     }
+
+    .table-header {
+        display: flex; 
+        align-items: center;
+        margin-bottom: 20px; 
+    }
+    
+    .icon-wrapper {
+        display: inline-flex;
+        margin-left: 930px; 
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .icon {
+        display: inline-flex;
+        width: 40px; 
+        height: 44px;
+        background-color: #007bff;
+        color: #fff; 
+        border-radius: 50%;
+        text-align: center; 
+        line-height: 44px; 
+        font-size: 50px; 
+        padding-left: 8px;
+        font-weight: bold; 
+        cursor: pointer; 
+    }
+    
+    .icon:hover {
+        background-color: #0056b3; 
+    }
 </style>
 
 <div class="example-wrapper">
+    <div class="table-header">
+        <h1>Teams</h1>
+        <a href="{{ path('app_team_create') }}" class="icon-wrapper">
+            <span class="icon">+</span>
+        </a>
+    </div>
+
     {% if teamsLeaders is not empty %}
         <table>
             <thead>
@@ -81,8 +120,8 @@
                             <td>{{ leadteam.getTeam().getMembers()|length }}</td>
                             <td>{{ leadteam.getTeamLead().getUsername() }}</td>
                             <td>
-                                <form method="get" action={{ path('app_team_delete') }}>
-                                    <input type="hidden" name="teamId" value={{ leadteam.getTeam().getId() }} />
+                                <form method="get" action="{{ path('app_team_delete') }}">
+                                    <input type="hidden" name="teamId" value="{{ leadteam.getTeam().getId() }}" />
                                     <button type="submit">Remove</button>
                                 </form>
                             </td>

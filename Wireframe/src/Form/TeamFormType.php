@@ -3,16 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Team;
-use Doctrine\DBAL\Types\IntegerType;
-use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
@@ -22,14 +18,14 @@ class TeamFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'placeholder' => 'Team Name',
+                'label' => 'Team Name',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a team name',
                     ]),
                 ],
             ])
-            ->add('number', IntegerType::class, [
+            ->add('numberOfMembers', IntegerType::class, [
                 'label' => 'Number of Members',
                 'constraints' => [
                     new NotBlank([
@@ -41,9 +37,6 @@ class TeamFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Create',
-            ]);
         ;
     }
 
