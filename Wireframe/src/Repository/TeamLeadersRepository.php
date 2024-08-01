@@ -36,6 +36,16 @@ class TeamLeadersRepository extends ServiceEntityRepository
             $teamLeaders->setTeamLead($leader);
         }
     }
+
+    public function deleteLeaders(Team $team) : void {
+        $teamLeaders = $this->showLeaders($team);
+        $em = $this->getEntityManager();
+
+        foreach ($teamLeaders as $teamLeader) {
+            $em->remove($teamLeader);
+        }
+        $em->flush();
+    }
     
     //    /**
     //     * @return TeamLeaders[] Returns an array of TeamLeaders objects

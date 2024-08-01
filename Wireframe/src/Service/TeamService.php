@@ -11,14 +11,14 @@ use App\Repository\UserRepository;
 
 class TeamService {
     
-    private static $teamRepository;
+    protected static $teamRepository;
     private $userRepository;
-    private $teamLeadersRepository;
+    protected static $teamLeadersRepository;
 
     public function __construct(TeamRepository $teamRepository, UserRepository $userRepository, TeamLeadersRepository $teamLeadersRepository) {
         self::$teamRepository = $teamRepository;
         $this->userRepository = $userRepository;
-        $this->teamLeadersRepository = $teamLeadersRepository;
+        self::$teamLeadersRepository = $teamLeadersRepository;
     }
 
     public static function getAll() : array {
@@ -40,13 +40,24 @@ class TeamService {
         if (!$team)
             throw new \Exception("Team not found");
 
-        return $this->teamLeadersRepository->showLeaders($team) ?: throw new \Exception("No leaders found");
+        return self::$teamLeadersRepository->showLeaders($team) ?: throw new \Exception("No leaders found");
     }
 
     public function getById(mixed $id) : ?Team {
-        $team = $this->teamRepository->find($id);
+        $team = self::$teamRepository->find($id);
 
         return $team ?: throw new \Exception("Team not found");
+    }
+
+    public function create(string $name, int $memberNumber) : void {
+        if (!$name || !$memberNumber)
+            throw new \Exception("Team member number or team name should not be empty");
+
+        $team = new Team();
+        $team->setName(trim($name));
+        $team->setNumberOfMembers($memberNumber);
+
+        $this->userRepository->create($team);
     }
 
     public function addWorkerToTeam(string $idUser, string $idTeam) : void {
@@ -61,7 +72,11 @@ class TeamService {
             throw new \Exception("Worker not found");
 
         if ($worker->hasRole(\App\Enum\Role::WORKER->value))
-            $this->teamRepository->addWorkerToTeam($worker, $team);
+            self::$teamRepository->addWorkerToTeam($worker, $team);
+    }
+
+    public function showWorkerData (string $userId) : User {
+        return $this->userRepository->find($userId) ?: throw new \Exception("User not found!");
     }
 
     public function removeWorkerFromTeam(string $teamId, string $idWorker) : void {
@@ -71,16 +86,17 @@ class TeamService {
         if (!$team || !$worker) 
             throw new \Exception("Team not found");
 
-        $this->teamRepository->removeWorkerFromTeam($worker, $team);
+        self::$teamRepository->removeWorkerFromTeam($worker, $team);
     }
 
-    public function deleteTeam(string $teamId) : void {
-        $team = $this->getById($teamId);
+    public static function deleteTeam(string $teamId) : void {
+        $team = self::$teamRepository->find($teamId);
 
         if (!$team) 
             throw new \Exception("Team not found");
 
-        $this->teamRepository->removeTeam($team);
+        self::$teamLeadersRepository->deleteLeaders($team);
+        self::$teamRepository->delete($team);
     }
 
 }

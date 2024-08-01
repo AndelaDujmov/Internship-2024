@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AnnualLeavesController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+
+    .leaders-container {
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 10px; 
+    }
+    .container {
+        border: 1px solid #ddd; 
+        padding: 16px;       
+        background-color: #fff; 
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        width: 300px;  
+        height: 100px;
+        cursor: pointer;  
+        display: grid;  
+        flex: 1 1 auto; 
+        min-width: 150px;
+        max-width: 300px;
+        box-sizing: border-box;
+        text-align: center;
+        align-items: center;
+    }
+
+    .container:hover {
+        background-color: rgba(100, 100, 100, 0.05);
+    }
+
+    .container h1 {
+        font-size: 24px;       
+        margin-bottom: 8px;    
+        font-weight: bold;     
+    }
+
+    .container p {
+        font-size: 16px;       
+        margin-bottom: 4px; 
+        margin: 0;   
+    }
+
+    .teamInfoContainer {
+        display: flex;
+        align-items:end;   
+    }
+    
+    .teamInfoContainer h1 {
+        gap: 10px; 
+        margin: 0; 
+    }
+    
+    .teamInfoContainer p {
+        margin: 0; 
+        margin-left: 300px;
+    }
+    
+    .anchor{
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
+
+<div class="example-wrapper">
+    <div>
+        <div class="teamInfoContainer">
+            <h1>{{ team.getName() }}</h1>
+            <p><b>Total member space:</b> {{ team.getNumberOfMembers() }}</p>
+            <p><b>Current member space:</b> {{ team.getMembers()|length }}</p>
+        </div>
+
+        <h2>Team Leader</h2>
+        <div class="leaders-container">
+            {% for tl in leaders %}
+                {% for lead in tl %} 
+                    <div class="container">
+                        <p><a class="anchor" href="{{ path('app_team_member', {'memberId': lead.getTeamLead().getId()}) }}">{{ lead.getTeamLead().getUsername() }}</a></p>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        
+        <h2>Project Leader</h2>
+        <div class="leaders-container">
+        {% for tl in leaders %}
+            {% for lead in tl %} 
+                <div class="container">
+                    <p><a class="anchor" href="{{ path('app_team_member', {'memberId': lead.getProjectLeader().getId()}) }}">{{ lead.getProjectLeader().getUsername() }}</a></p>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <br>
+    <h2>Members</h2> 
+        <div class="leaders-container">
+        
+        {% for member in team.getMembers %}
+            <div class="container">
+                <p><a class="anchor" href="{{ path('app_team_member', {'memberId': member.getId()}) }}">{{ member.getUsername() }}</a></p>
+            </div>
+        {% endfor %}
+       </div>
+    </div>
+    
+
+</div>
+{% endblock %}

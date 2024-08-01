@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Team;
+use App\Form\TeamFormType;
 use App\Service\TeamService;
 use App\Service\UserManagementService;
 use Exception;
@@ -38,44 +40,103 @@ class TeamController extends AbstractController
                 'teamsLeaders' => $teamLeaders,
             ]);
        }catch (Exception $e){
-
-       }
+            return $this->render('error/error.html.twig', [
+                'controller_name' => 'TeamController',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
-    #[Route('/team/{teamId}', name: 'app_team_members')]
+    #[Route('/team/create', name:'app_team_create')]
+    public function createTeam(Request $request): Response {
+        $form = $this->createForm(TeamFormType::class, new Team());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $name = $data->getName();
+            $memberNumber = $data->getNumberOfMembers();
+
+            try {
+                $this->teamService->create($name, $memberNumber);
+                return $this->redirectToRoute('app_team');
+            } catch (\Exception $e) {
+                return $this->render('error/error.html.twig', [
+                    'controller_name' => 'TeamController',
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return $this->render('team/members.html.twig', [
+            'controller_name' => 'TeamController',
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/team/members/{teamId}', name: 'app_team_members')]
     public function showMembersInTeam(string $teamId){
         try{
             $members = $this->teamService->showAllTeammates($teamId);
+            $team = $this->teamService->getById($teamId);
+            $teamLeaders[] = $this->teamService->showLeaders($team->getId());
 
             return $this->render('team/members.html.twig', [
                 'controller_name' => 'TeamController',
                 'members' => $members,
+                'team' => $team,
+                'leaders' => $teamLeaders,
                
             ]);
         }catch (Exception $e){
-
+            return $this->render('error/error.html.twig', [
+                'controller_name' => 'TeamController',
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
-    public function deleteTeam(Request $request) : RedirectResponse{
-       try{
-            $teamId = $request->get('teamId');
+    #[Route('/team/member/{memberId}', name: 'app_team_member')]
+    public function userInfo(string $memberId) : Response {
+        try{
+            $user = $this->teamService->showWorkerData($memberId);
 
-            $this->teamService->deleteTeam($teamId);
-
-            return $this->redirectToRoute('/team');
-       }catch (Exception $e){
-        
-       }
+             return $this->render('team/userInfo.html.twig', [
+                'controller_name' => 'TeamController',
+                'user' => $user,
+            ]);
+        }catch(Exception $e){
+            return $this->render('error/error.html.twig', [
+                'controller_name' => 'TeamController',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     #[Route('/team/remove', name: 'app_team_remove')]
-    public function removeMemberFromTeam(Request $request) : RedirectResponse{
+    public function removeMemberFromTeam(Request $request) : RedirectResponse {
         $teamId = $request->get('');
         $memberId = $request->get('');
 
         $this->teamService->removeWorkerFromTeam($teamId, $memberId);
 
-        return $this->redirectToRoute('/team');
+        return $this->redirectToRoute('app_team');
+    }
+
+    #[Route('/team/delete', name: 'app_team_delete', methods: ['GET'])]
+    public function deleteTeam(Request $request) : Response {
+       try{
+            $teamId = $request->get('teamId');
+
+            TeamService::deleteTeam($teamId);
+            
+            usleep(1200);
+
+            return $this->redirectToRoute('app_team');
+       }catch (Exception $e){
+            return $this->render('error/error.html.twig', [
+                'controller_name' => 'TeamController',
+                'error' => $e->getMessage(),
+            ]);
+       }
     }
 }

@@ -56,6 +56,12 @@ class TeamRepository extends ServiceEntityRepository
         $em->flush();
     }
 
+    public function delete(Team $team) : void {
+        $em = $this->getEntityManager();
+        $em->remove($team);
+        $em->flush();
+    }
+
     //    /**
     //     * @return Team[] Returns an array of Team objects
     //     */

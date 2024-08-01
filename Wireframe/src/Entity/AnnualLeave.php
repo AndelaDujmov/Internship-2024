@@ -25,7 +25,7 @@ class AnnualLeave
     #[ORM\Column(length: 20)]
     private ?string $month = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne()]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $worker = null;
 

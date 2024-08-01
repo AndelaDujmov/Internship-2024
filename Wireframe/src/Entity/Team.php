@@ -24,7 +24,7 @@ class Team
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'team')]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'team', cascade: ['persist', 'remove'])]
     private Collection $members;
 
     #[ORM\Column]
@@ -89,12 +89,12 @@ class Team
         return $this;
     }
 
-    public function getNumberOfMemers(): ?int
+    public function getNumberOfMembers(): ?int
     {
         return $this->numberOfMembers;
     }
 
-    public function setNumberOfMemers(int $numberOfMemers): static
+    public function setNumberOfMembers(int $numberOfMemers): static
     {
         $this->numberOfMembers = $numberOfMemers;
 

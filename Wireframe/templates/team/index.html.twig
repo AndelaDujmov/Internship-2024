@@ -55,6 +55,11 @@
     .addMember:hover {
         background-color: #0056b3;
     }
+
+    #anchor{
+        text-decoration: none;
+        color: inherit;
+    }
 </style>
 
 <div class="example-wrapper">
@@ -72,13 +77,12 @@
                 {% for team in teamsLeaders %}
                     {% for leadteam in team %}
                         <tr>
-                            <td>{{ leadteam.getTeam().getName() }}</td>
+                            <td><a id="anchor" href="{{ path('app_team_members', {'teamId': leadteam.getTeam().getId()}) }}">{{ leadteam.getTeam().getName() }}</a></td>
                             <td>{{ leadteam.getTeam().getMembers()|length }}</td>
                             <td>{{ leadteam.getTeamLead().getUsername() }}</td>
                             <td>
-                                <form method="post" action={{ path('app_team_remove') }}>
+                                <form method="get" action={{ path('app_team_delete') }}>
                                     <input type="hidden" name="teamId" value={{ leadteam.getTeam().getId() }} />
-                                    <input type="hidden" name="memberId" value={{ leadteam.getTeam().getId() }} />
                                     <button type="submit">Remove</button>
                                 </form>
                             </td>
