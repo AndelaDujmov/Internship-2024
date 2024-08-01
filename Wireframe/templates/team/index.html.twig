@@ -1,54 +1,95 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TeamController!{% endblock %}
+{% block title %}TeamController{% endblock %}
 
 {% block body %}
 
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .example-wrapper {
+        margin: 2em auto;
+        max-width: 1200px;
+        width: 95%;
+        font-family: 'Arial', sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2em;
+    }
     
-    .example-wrapper { 
-        margin: 1em auto; 
-        max-width: 800px; 
-        width: 95%; 
-        font: 18px/1.5 sans-serif; 
+    th, td {
+        padding: 0.75em;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
     }
-    .team-container {
-        border: 1px solid #ccc; 
-        padding: 1em; 
-        margin-bottom: 1em; 
+    
+    th {
+        background-color: #f4f4f4;
+        font-size: 16px;
+        color: #333;
+    }
+    
+    tr:hover {
+        background-color: rgba(100, 100, 100, 0.05);
+    }
+    
+    .no-teams, .no-members {
+        font-style: italic;
+        color: #888;
+        text-align: center;
+        margin-top: 2em;
+    }
+
+    .addMember {
+        margin-top: 1em;
+        padding: 0.5em 1em;
+        font-size: 14px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
         border-radius: 4px;
+        cursor: pointer;
     }
-    .team-container h2 {
-        margin-top: 0;
+
+    .addMember:hover {
+        background-color: #0056b3;
     }
-    .team-member {
-        padding: 0.5em;
-        border-top: 1px solid #eee;
-    }
-    .team-member:first-child {
-        border-top: none;
-    }
-    .team-member:last-child {
-        border-bottom: none;
-    }   
 </style>
 
 <div class="example-wrapper">
-    {% for team in teamsLeaders %}
-        <div class="team-container">
-            {% for leadteam in team %}
-                <div>
-                    <h3>{{ leadteam.getTeam().getName() }}</h3>
-                    <p>{{ leadteam.getProjectLeader().getUsername() }}</p><br>
-                    <p>{{ leadteam.getTeamLead().getUsername() }}</p>
-                </div>
-            {% endfor %}
-        </div>
+    {% if teamsLeaders is not empty %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Team Name</th>
+                    <th>Number of People in Team</th>
+                    <th>Team Leader</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in teamsLeaders %}
+                    {% for leadteam in team %}
+                        <tr>
+                            <td>{{ leadteam.getTeam().getName() }}</td>
+                            <td>{{ leadteam.getTeam().getMembers()|length }}</td>
+                            <td>{{ leadteam.getTeamLead().getUsername() }}</td>
+                            <td>
+                                <form method="post" action={{ path('app_team_remove') }}>
+                                    <input type="hidden" name="teamId" value={{ leadteam.getTeam().getId() }} />
+                                    <input type="hidden" name="memberId" value={{ leadteam.getTeam().getId() }} />
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
-        <p>No teams available</p>
-    {% endfor %}
-
+        <p class="no-teams">No teams available</p>
+    {% endif %}
 </div>
+
 {% endblock %}

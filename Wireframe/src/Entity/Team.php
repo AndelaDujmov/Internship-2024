@@ -27,6 +27,9 @@ class Team
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'team')]
     private Collection $members;
 
+    #[ORM\Column]
+    private ?int $numberOfMembers = null;
+
     public function __construct()
     {
         if ($this->id === null) {
@@ -62,6 +65,10 @@ class Team
 
     public function addMember(User $member): static
     {
+        if ($this->numberOfMembers !== null && $this->members->count() >= $this->numberOfMembers) {
+            throw new \Exception('Cannot add more members. Maximum number reached.');
+        }
+
         if (!$this->members->contains($member)) {
             $this->members->add($member);
             $member->setTeam($this);
@@ -78,6 +85,18 @@ class Team
                 $member->setTeam(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNumberOfMemers(): ?int
+    {
+        return $this->numberOfMembers;
+    }
+
+    public function setNumberOfMemers(int $numberOfMemers): static
+    {
+        $this->numberOfMembers = $numberOfMemers;
 
         return $this;
     }

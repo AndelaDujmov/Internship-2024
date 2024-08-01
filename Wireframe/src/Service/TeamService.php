@@ -64,13 +64,23 @@ class TeamService {
             $this->teamRepository->addWorkerToTeam($worker, $team);
     }
 
-    public function removeWorkerFromTeam(string $teamId) : void {
+    public function removeWorkerFromTeam(string $teamId, string $idWorker) : void {
+        $team = $this->getById($teamId);
+        $worker = $this->userRepository->find($idWorker);   
+
+        if (!$team || !$worker) 
+            throw new \Exception("Team not found");
+
+        $this->teamRepository->removeWorkerFromTeam($worker, $team);
+    }
+
+    public function deleteTeam(string $teamId) : void {
         $team = $this->getById($teamId);
 
         if (!$team) 
             throw new \Exception("Team not found");
 
-        $this->teamRepository->removeWorkerFromTeam($team);
+        $this->teamRepository->removeTeam($team);
     }
 
 }

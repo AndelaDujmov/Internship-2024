@@ -25,7 +25,7 @@ class AnnualLeavesController extends AbstractController
 
     #[Route('/annual/leaves/:userId', name: 'app_annual_leaves_get')]
     public function getAnnualLeavesByUser(string $userId) : Response {
-        $annualLeaves = $this->annualLeaveService->();
+        #$annualLeaves = $this->annualLeaveService->();
         return $this->render('annual_leaves/perUser.html.twig', [
             'controller_name' => 'AnnualLeavesController',
         ]);

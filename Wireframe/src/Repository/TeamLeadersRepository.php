@@ -36,7 +36,6 @@ class TeamLeadersRepository extends ServiceEntityRepository
             $teamLeaders->setTeamLead($leader);
         }
     }
-
     
     //    /**
     //     * @return TeamLeaders[] Returns an array of TeamLeaders objects

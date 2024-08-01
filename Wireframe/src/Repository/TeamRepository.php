@@ -37,7 +37,6 @@ class TeamRepository extends ServiceEntityRepository
     }
 
     public function showAllWorkers(Team $team): array {
-        $em = $this->getEntityManager();
         return $team->getMembers()->toArray();
     }
 
@@ -49,7 +48,7 @@ class TeamRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    public function removeWorkerToTeam(User $worker, Team $team) : void {
+    public function removeWorkerFromTeam(User $worker, Team $team) : void {
         $team->removeMember($worker);
         $em = $this->getEntityManager();
         $em->persist($team);
