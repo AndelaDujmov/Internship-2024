@@ -11,9 +11,13 @@
 <div class="example-wrapper">
     <h1>{{ user.getUsername() }}</h1>
 
-    <p>First Name:</p>
-    <p>Last Name:</p>
-    <p>Email: </p>
-    <p>Annual Leaves</p>
+    <p>First Name: {{ user.getFirstName() }}</p>
+    <p>Last Name: {{ user.getLastName() }}</p>
+    <p>Email: {{ user.getEmail() }}</p>
+    <p>Annual Leaves:</p>
+    {% for vacation in vacations %}
+        <p>{{ vacation.getEnd().format('Y-m-d, D') }}</p>
+        <p>{{ vacation.getReason() }}</p>
+    {% endfor %}
 </div>
 {% endblock %}

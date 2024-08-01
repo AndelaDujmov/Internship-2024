@@ -1,0 +1,113 @@
+{# templates/annual_leaves/create.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}TeamController{% endblock %}
+
+{% block body %}
+    <style>
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            height: 48px;
+        }
+        .form-group button {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <div class="form-container">
+        <h1>Create Annual Leave Request</h1>
+        <form method="post" action="{{ path('app_annual_leaves_create') }}">
+            <div class="form-group">
+                <label for="start">Start Date</label>
+                <input type="date" id="start" name="start" required>
+            </div>
+            <div class="form-group">
+                <label for="end">End Date</label>
+                <input type="date" id="end" name="end"  required>
+            </div>
+            <div class="form-group">
+                <label for="reason">Reason</label>
+                <input type="text" id="reason" name="reason"  required>
+            </div>
+            <div class="day-count">
+                Total Days: <span id="total-days">0</span>
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const start = document.getElementById('start');
+            const end = document.getElementById('end');
+            const totalDaysElement = document.getElementById('total-days'); 
+    
+            const calculateDaysDifference = (startDate, endDate) => {
+                const timeDifference = new Date(endDate) - new Date(startDate);
+                return Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); 
+            };
+    
+            const updateCalendar = () => {
+                const startDate = start.value;
+                const endDate = end.value;
+    
+                if (startDate) {
+                    end.setAttribute('min', startDate);
+    
+                    if (endDate && new Date(startDate) > new Date(endDate)) {
+                        end.value = '';
+                        totalDaysElement.textContent = '0';
+                    } else {
+                        if (endDate) {
+                            const daysDifference = calculateDaysDifference(startDate, endDate);
+                            totalDaysElement.textContent = daysDifference;
+                        } else {
+                            totalDaysElement.textContent = '0';
+                        }
+                    }
+                } else {
+                    totalDaysElement.textContent = '0';
+                }
+            };
+    
+            start.addEventListener('change', updateCalendar);
+            end.addEventListener('change', updateCalendar);
+        });
+    </script>
+    
+{% endblock %}

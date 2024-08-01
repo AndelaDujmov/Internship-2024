@@ -9,31 +9,33 @@ use App\Repository\RequestForALRepository;
 use App\Repository\UserRepository;
 
 class AnnualLeaveService {
-
-    private $annualLeaveRepository;
     private $userRepository;
     private $requestForALRepository;
 
-    public function __construct(AnnualLeaveRepository $alRepo, RequestForALRepository $alReqRepo, UserRepository $userRepository) {
-        $this->annualLeaveRepository = $alRepo;
+    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository) {
         $this->requestForALRepository = $alReqRepo;
         $this->userRepository = $userRepository;
     }
 
     public function createRequestForAL(string $userId, string $start, string $end, ?string $reason=null) : bool {
-        $user = $this->userRepository->find($userId);
-        $currentMonth = (new \DateTime())->format('F');
-        $al = $this->annualLeaveRepository->getALBy($user, $currentMonth);
+        $user = $this->userRepository->getUserById($userId) ?: new \Exception("User not found");
         $requestForAL = new RequestForAL();
 
-        //provjera u al je li ostalo dana vise od trazenog za godisnji odmor
+        $startDate = $this->parseToDatetime($start);
+        $endDate = $this->parseToDatetime($end);
+        $diff = $startDate->diff($endDate);
 
-        $requestForAL->setStart($this->parseToDatetime($start));
-        $requestForAL->setEnd($this->parseToDatetime($end));
+        if($user->getVacationDays() < (int)$diff->format("%r%a")){
+            return false;
+        }
+
+        $vacationsNow = $user->getVacationDays() - (int)$diff->format("%r%a");
+        $this->userRepository->update($vacationsNow, $user->getEmail());
+        $requestForAL->setStart($startDate);
+        $requestForAL->setEnd($endDate);
         $requestForAL->setReason($reason);
         $requestForAL->setWorker($user);
         $requestForAL->setStatus(\App\Enum\Status::PENDING->value);
-
         $this->requestForALRepository->create($requestForAL);
 
         return true;
@@ -55,8 +57,6 @@ class AnnualLeaveService {
 
         if ($alRequest->getTeamLeader() != null && $alRequest->getProjectLeader() != null){
             $alRequest->setStatus(\App\Enum\Status::COMPLETED->value);
-            $al = new AnnualLeave();
-            $al->setWorker($alRequest->getWorker());
             $daysInAL = $alRequest->getEnd()->diff($alRequest->getStart())->days;
             #$al->setTotalDays($al->get);
 

@@ -22,6 +22,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
+
+    public function getUserById($id): ?User {
+        return $this->findOneBy(["id"=> $id]);
+    }
+
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
@@ -31,6 +36,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function update(int $days, string $email) : void {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update(User::class, 'u')
+            ->set('u.vacationDays', ':newVacationDays')
+            ->where('u.email = :query')
+            ->setParameter('newVacationDays', $days)
+            ->setParameter('query', $email)
+            ->getQuery()
+            ->execute();
     }
 
     public function getUserByIdentifier(string $emailOrUsername): ?User {

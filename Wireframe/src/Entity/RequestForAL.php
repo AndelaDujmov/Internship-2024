@@ -32,7 +32,7 @@ class RequestForAL
      */
     private string $status;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateOfProcessing = null;
 
     #[ORM\ManyToOne]

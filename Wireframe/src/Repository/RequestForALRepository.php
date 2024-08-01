@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\RequestForAL;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -36,6 +37,17 @@ class RequestForALRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $em->remove($requestForAL);
         $em->flush();
+    }
+
+    public function findByUser(string $id){
+        return $this->createQueryBuilder('r')
+                    ->where('r.worker = :user')
+                    ->setParameter('user', $id)
+                    ->orderBy('r.end', 'DESC')
+                    ->orderBy('r.start', 'DESC')
+                    ->getQuery()
+                    ->getResult()
+                    ;
     }
 
     //    /**

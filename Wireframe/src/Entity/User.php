@@ -49,6 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $lastName = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $vacationDays = null;
+
     public function __construct() {
         if ($this->id === null) {
             $this->id = Uuid::v4()->toRfc4122();
@@ -190,6 +193,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(?string $lastName): static
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getVacationDays(): ?int
+    {
+        return $this->vacationDays;
+    }
+
+    public function setVacationDays(?int $vacationDays): static
+    {
+        $this->vacationDays = $vacationDays;
 
         return $this;
     }

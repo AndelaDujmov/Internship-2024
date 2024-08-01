@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Entity\RequestForAL;
 use App\Entity\Team;
 use App\Entity\TeamLeaders;
 use App\Entity\User;
+use App\Repository\RequestForALRepository;
 use App\Repository\TeamLeadersRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
@@ -14,11 +16,13 @@ class TeamService {
     protected static $teamRepository;
     private $userRepository;
     protected static $teamLeadersRepository;
+    private $annualLeaveRepository;
 
-    public function __construct(TeamRepository $teamRepository, UserRepository $userRepository, TeamLeadersRepository $teamLeadersRepository) {
+    public function __construct(TeamRepository $teamRepository, UserRepository $userRepository, TeamLeadersRepository $teamLeadersRepository, RequestForALRepository $annualLeaveRepository) {
         self::$teamRepository = $teamRepository;
         $this->userRepository = $userRepository;
         self::$teamLeadersRepository = $teamLeadersRepository;
+        $this->annualLeaveRepository = $annualLeaveRepository;
     }
 
     public static function getAll() : array {
@@ -33,6 +37,11 @@ class TeamService {
 
         return $teammates ?: throw new \Exception("Teammates not found");
     }
+
+    public function getUsersVacation(string $userId) : array|null {
+        return $this->annualLeaveRepository->findByUser($userId);
+    }
+
 
     public function showLeaders(string $idTeam) : array {
         $team = self::$teamRepository->find($idTeam);

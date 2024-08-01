@@ -35,6 +35,13 @@ class TeamFixture extends Fixture
         $teamMember->setEmail("tm1@gmail.com");
         $teamMember->setPassword("A1232131.");
         $teamMember->setRoles([\App\Enum\Role::WORKER->value]);
+        $teamMember->setVacationDays(20);
+
+        $requestForAL = new RequestForAL();
+        $requestForAL->setWorker($teamMember);
+        $requestForAL->setStart(new DateTime("2023-01-01 00:00:00"));
+        $requestForAL->setEnd(new DateTime("2023-12-31 23:59:59"));
+        $requestForAL->setReason("idk");
 
         $teamMember2 = new User();
         $teamMember2->setUsername("TeamMember2");
@@ -48,6 +55,12 @@ class TeamFixture extends Fixture
         $teamMember3->setPassword("A1232131.");
         $teamMember3->setRoles([\App\Enum\Role::WORKER->value]);
 
+        $requestForAL2 = new RequestForAL();
+        $requestForAL2->setWorker($teamMember);
+        $requestForAL2->setStart(new DateTime("2023-01-01 00:00:00"));
+        $requestForAL2->setEnd(new DateTime("2023-12-31 23:59:59"));
+        $requestForAL2->setReason("idk");
+
         for ($i = 1; $i < 3; $i++) {
             // $worker = new User();
             // $worker->setUsername("Worker Name" . (string)($i));
@@ -57,7 +70,7 @@ class TeamFixture extends Fixture
             $team = new Team();
             $teamLeaders = new TeamLeaders();
             $team->setName("Team " . (string)($i));  
-            $team->setNumberOfMemers(4);
+            $team->setNumberOfMembers(4);
             $team->addMember($teamMember);
             $team->addMember($teamMember2);
             $team->addMember($teamMember3);
@@ -72,6 +85,8 @@ class TeamFixture extends Fixture
             $manager->persist($teamLeader);
             $manager->persist($teamLeaders);
             $manager->persist($projectLeader);
+            $manager->persist($requestForAL);
+            $manager->persist($requestForAL2);
         }
 
         $manager->flush();

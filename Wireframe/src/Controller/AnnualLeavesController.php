@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Service\AnnualLeaveService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -23,19 +25,33 @@ class AnnualLeavesController extends AbstractController
         ]);
     }
 
-    #[Route('/annual/leaves/:userId', name: 'app_annual_leaves_get')]
-    public function getAnnualLeavesByUser(string $userId) : Response {
-        #$annualLeaves = $this->annualLeaveService->();
-        return $this->render('annual_leaves/perUser.html.twig', [
-            'controller_name' => 'AnnualLeavesController',
-        ]);
-    }
+    #[Route('/annual/leaves/request/create', name: 'app_annual_leaves_create', methods: ['GET', 'POST'])]
+    public function createRequest(Request $request) : Response {
+        #$userId = $request->get('id');
+        $userId = 'de668405-f6a8-4940-884b-a5361c24ddfa';
+        $start = $request->get('start');
+        $end = $request->get('end');
+        $reason = $request->get('reason');
 
-    #[Route('/annual/leaves/request/create', name: 'app_annual_leaves_create')]
-    public function createRequest() : Response {
-        return $this->render('annual_leaves/create.html.twig', [
-            'controller_name' => 'AnnualLeavesController',
-        ]);
+        if ($start && $end && $reason){
+            $value = $this->annualLeaveService->createRequestForAL($userId, $start, $end, $reason);
+
+            if ($value){
+                return $this->redirectToRoute('app_annual_leaves');
+            }
+            
+        }
+
+        try{
+            return $this->render('annual_leaves/create.html.twig', [
+                'controller_name' => 'AnnualLeavesController',
+            ]);
+        }catch (Exception $e) {
+            return $this->render('error/error.html.twig', [
+                'controller_name' => 'TeamController',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     #[Route('/annual/leaves/request/:id', name: 'app_annual_leaves_process')]

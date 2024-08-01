@@ -126,10 +126,12 @@ class TeamController extends AbstractController
     public function userInfo(string $memberId) : Response {
         try{
             $user = $this->teamService->showWorkerData($memberId);
+            $vacations = $this->teamService->getUsersVacation($memberId);
 
              return $this->render('team/userInfo.html.twig', [
                 'controller_name' => 'TeamController',
                 'user' => $user,
+                'vacations' => $vacations,
             ]);
         }catch(Exception $e){
             return $this->render('error/error.html.twig', [
