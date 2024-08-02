@@ -28,7 +28,7 @@ class AnnualLeavesController extends AbstractController
     #[Route('/annual/leaves/request/create', name: 'app_annual_leaves_create', methods: ['GET', 'POST'])]
     public function createRequest(Request $request) : Response {
         #$userId = $request->get('id');
-        $userId = 'de668405-f6a8-4940-884b-a5361c24ddfa';
+        $userId = 'de668405-f6a8-4940-884b-a5361c24ddfa'; //id trenutno logiranog usera
         $start = $request->get('start');
         $end = $request->get('end');
         $reason = $request->get('reason');
@@ -39,7 +39,6 @@ class AnnualLeavesController extends AbstractController
             if ($value){
                 return $this->redirectToRoute('app_annual_leaves');
             }
-            
         }
 
         try{

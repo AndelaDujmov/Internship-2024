@@ -49,7 +49,7 @@ class TeamService {
         if (!$team)
             throw new \Exception("Team not found");
 
-        return self::$teamLeadersRepository->showLeaders($team) ?: throw new \Exception("No leaders found");
+        return self::$teamLeadersRepository->showLeaders($team);
     }
 
     public function getById(mixed $id) : ?Team {
@@ -58,15 +58,8 @@ class TeamService {
         return $team ?: throw new \Exception("Team not found");
     }
 
-    public function create(string $name, int $memberNumber) : void {
-        if (!$name || !$memberNumber)
-            throw new \Exception("Team member number or team name should not be empty");
-
-        $team = new Team();
-        $team->setName(trim($name));
-        $team->setNumberOfMembers($memberNumber);
-
-        $this->userRepository->create($team);
+    public function create(Team $team) : void {
+        self::$teamRepository->create($team);
     }
 
     public function addWorkerToTeam(string $idUser, string $idTeam) : void {

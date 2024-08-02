@@ -53,45 +53,9 @@ class TeamController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $name = $data->getName();
-            $memberNumber = $data->getNumberOfMembers();
-
-            try {
-                $this->teamService->create($name, $memberNumber);
-                return $this->redirectToRoute('app_team');
-            } catch (\Exception $e) {
-                return $this->render('error/error.html.twig', [
-                    'controller_name' => 'TeamController',
-                    'error' => $e->getMessage(),
-                ]);
-            }
-    }
-
-        return $this->render('team/create.html.twig', [
-            'controller_name' => 'TeamController',
-            'form' => $form->createView(),
-        ]);
-}
-
-    #[Route('/team/create', name:'app_team_create_post', methods: ['POST'])]
-    public function createTeamPost(Request $request): Response {
-        $form = $this->createForm(TeamFormType::class, new Team());
-
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
-            $name = $data->getName();
-            $memberNumber = $data->getNumberOfMembers();
-
-            try {
-                $this->teamService->create($name, $memberNumber);
-                return $this->redirectToRoute('app_team');
-            } catch (\Exception $e) {
-                return $this->render('error/error.html.twig', [
-                    'controller_name' => 'TeamController',
-                    'error' => $e->getMessage(),
-                ]);
-            }
+            $this->teamService->create($team);
+       
+            return $this->redirectToRoute('app_team');           
         }
 
         return $this->render('team/create.html.twig', [
@@ -143,8 +107,8 @@ class TeamController extends AbstractController
 
     #[Route('/team/remove', name: 'app_team_remove')]
     public function removeMemberFromTeam(Request $request) : RedirectResponse {
-        $teamId = $request->get('');
-        $memberId = $request->get('');
+        $teamId = $request->get('teamId');
+        $memberId = $request->get('memberId');
 
         $this->teamService->removeWorkerFromTeam($teamId, $memberId);
 
@@ -157,8 +121,6 @@ class TeamController extends AbstractController
             $teamId = $request->get('teamId');
 
             TeamService::deleteTeam($teamId);
-            
-            usleep(1200);
 
             return $this->redirectToRoute('app_team');
        }catch (Exception $e){
