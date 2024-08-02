@@ -96,6 +96,7 @@ class TeamController extends AbstractController
                 'controller_name' => 'TeamController',
                 'user' => $user,
                 'vacations' => $vacations,
+
             ]);
         }catch(Exception $e){
             return $this->render('error/error.html.twig', [
@@ -105,11 +106,10 @@ class TeamController extends AbstractController
         }
     }
 
-    #[Route('/team/remove', name: 'app_team_remove')]
-    public function removeMemberFromTeam(Request $request) : RedirectResponse {
+    #[Route('/team/remove/{memberId}', name: 'app_team_member_remove')]
+    public function removeMemberFromTeam(Request $request, string $memberId) : RedirectResponse {
         $teamId = $request->get('teamId');
-        $memberId = $request->get('memberId');
-
+    
         $this->teamService->removeWorkerFromTeam($teamId, $memberId);
 
         return $this->redirectToRoute('app_team');

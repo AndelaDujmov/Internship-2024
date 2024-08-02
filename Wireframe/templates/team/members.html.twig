@@ -91,7 +91,7 @@
         {% for tl in leaders %}
             {% for lead in tl %} 
                 <div class="container">
-                    <p><a class="anchor" href="{{ path('app_team_member', {'memberId': lead.getProjectLeader().getId()}) }}">{{ lead.getProjectLeader().getUsername() }}</a></p>
+                    <p><a class="anchor" href="{{ path('app_team_member', {'memberId': lead.getProjectLeader.getId()}) }}">{{ lead.getProjectLeader().getUsername() }}</a></p>
                 </div>
             {% endfor %}
         {% endfor %}
@@ -103,6 +103,10 @@
         {% for member in team.getMembers %}
             <div class="container">
                 <p><a class="anchor" href="{{ path('app_team_member', {'memberId': member.getId()}) }}">{{ member.getUsername() }}</a></p>
+                <form method="post"  action="{{ path('app_team_member_remove', {'memberId': member.getId()}) }}">
+                    <input type="hidden" name="teamId" value="{{ team.getId() }}" />
+                    <button type="submit">Delete</button>
+                </form>
             </div>
         {% endfor %}
        </div>
