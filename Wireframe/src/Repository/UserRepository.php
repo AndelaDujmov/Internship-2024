@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use DoctrineExtensions\Query\Mysql\FindInSet;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -60,6 +61,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ')
         ->setParameter('query', $emailOrUsername)
         ->getOneOrNullResult();
+    }
+
+    public function getUsersByRole(string $roleName): array {
+        $users = $this->findAll();
+
+        return array_filter($users, function(User $user) use ($roleName) {
+            if ($user->hasRole($roleName)) {
+                return true;
+            }
+            return false;
+        });
     }
 
     //    /**

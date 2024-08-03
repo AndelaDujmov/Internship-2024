@@ -25,6 +25,10 @@ class TeamService {
         $this->annualLeaveRepository = $annualLeaveRepository;
     }
 
+    public function create(Team $team) : void {
+        self::$teamRepository->create($team);
+    }
+
     public static function getAll() : array {
         $teams = self::$teamRepository->findAll();
 
@@ -35,7 +39,7 @@ class TeamService {
         $team = self::$teamRepository->find($idTeam);
         $teammates = self::$teamRepository->showAllWorkers($team);
 
-        return $teammates ?: throw new \Exception("Teammates not found");
+        return $teammates;
     }
 
     public function getUsersVacation(string $userId) : array|null {
@@ -55,11 +59,7 @@ class TeamService {
     public function getById(mixed $id) : ?Team {
         $team = self::$teamRepository->find($id);
 
-        return $team ?: throw new \Exception("Team not found");
-    }
-
-    public function create(Team $team) : void {
-        self::$teamRepository->create($team);
+        return $team;
     }
 
     public function addWorkerToTeam(string $idUser, string $idTeam) : void {
@@ -77,8 +77,24 @@ class TeamService {
             self::$teamRepository->addWorkerToTeam($worker, $team);
     }
 
+    public function addLeadersToTeam(TeamLeaders $teamLeaders) : void {
+        self::$teamLeadersRepository->addLeaders($teamLeaders);
+    }
+
     public function showWorkerData (string $userId) : User {
         return $this->userRepository->find($userId) ?: throw new \Exception("User not found!");
+    }
+
+    public function showWorkers(string $teamId) : ?array {
+        $workers = $this->userRepository->getUsersByRole(\App\Enum\Role::WORKER->value);
+
+        if (is_array($workers)){
+            return array_filter($workers, function(User $worker) use ($teamId) {
+                return $worker->getTeam() == NULL || $worker->getTeam()->getId() !== $teamId;
+            });
+        }
+
+        return null;
     }
 
     public function removeWorkerFromTeam(string $teamId, string $idWorker) : void {

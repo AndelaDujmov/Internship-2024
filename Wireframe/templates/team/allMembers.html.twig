@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AnnualLeavesController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2em;
+    }
+    
+    th, td {
+        padding: 0.75em;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+        background-color: #f4f4f4;
+        font-size: 16px;
+        color: #333;
+    }
+    
+    tr:hover {
+        background-color: rgba(100, 100, 100, 0.05);
+    }
+    
+    .no-teams, .no-members {
+        font-style: italic;
+        color: #888;
+        text-align: center;
+        margin-top: 2em;
+    }
+
+</style>
+
+<div class="example-wrapper">
+    <h1>All members</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+                <tr>
+                    <td>{{ member.getUsername() }}</td>
+                    <td>
+                        <form method="post" action="{{ path('team_add_new_member', { 'teamId': teamId, 'memberId': member.getId() }) }}">
+                            <button type="submit">Add</button>
+                        </form>
+                      
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+{% endblock %}

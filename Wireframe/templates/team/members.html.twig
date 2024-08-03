@@ -4,13 +4,13 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper { margin: 1em auto; max-width: 1700px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 
     .leaders-container {
         display: flex;
         flex-wrap: wrap; 
-        gap: 10px; 
+        gap: 2px; 
     }
     .container {
         border: 1px solid #ddd; 
@@ -73,6 +73,14 @@
             <h1>{{ team.getName() }}</h1>
             <p><b>Total member space:</b> {{ team.getNumberOfMembers() }}</p>
             <p><b>Current member space:</b> {{ team.getMembers()|length }}</p>
+            <p>
+                {% if team.getNumberOfMembers() >= team.getMembers()|length %}
+                <form method="get" action="{{ path('team_see_workers') }}">
+                    <input type="hidden" name="teamId" value="{{ team.getId() }}"/>
+                    <button type="submit">Add member</button>
+                </form>
+                {% endif %}
+            </p>
         </div>
 
         <h2>Team Leader</h2>

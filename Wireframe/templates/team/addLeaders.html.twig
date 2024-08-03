@@ -4,13 +4,13 @@
 
 {% block body %}
 
-    <h1>Create a Team</h1>
+    <h1>{{ teams.getTeam().getName() ?? null }}</h1>
 
     {{ form_errors(form) }}
 
     {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.numberOfMembers) }}
+        {{ form_row(form.teamLead) }}
+        {{ form_row(form.projectLeader) }}
 
         <button type="submit" class="btn">Create</button>
     {{ form_end(form) }}

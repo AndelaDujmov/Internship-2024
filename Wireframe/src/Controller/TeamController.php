@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Team;
+use App\Entity\TeamLeaders;
 use App\Form\TeamFormType;
+use App\Form\TeamLeadersFormType;
 use App\Service\TeamService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +57,7 @@ class TeamController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->teamService->create($team);
        
-            return $this->redirectToRoute('app_team');           
+            return $this->redirectToRoute('app_team_add_leaders', ['teamId' => $team->getId()]);           
         }
 
         return $this->render('team/create.html.twig', [
@@ -64,26 +66,71 @@ class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('/team/members/{teamId}', name: 'app_team_members')]
-    public function showMembersInTeam(string $teamId){
-        try{
-            $members = $this->teamService->showAllTeammates($teamId);
-            $team = $this->teamService->getById($teamId);
-            $teamLeaders[] = $this->teamService->showLeaders($team->getId());
+    
+    #[Route('/team/leaders/{teamId}', name:'app_team_add_leaders')]
+    public function addLeaders(Request $request, string $teamId): Response {
+        $teamLeaders = new TeamLeaders();
+        $team = $this->teamService->getById($teamId);
+        $teamLeaders->setTeam($team);
+        $form = $this->createForm(TeamLeadersFormType::class, $teamLeaders);
+        $form->handleRequest($request);
+       
 
-            return $this->render('team/members.html.twig', [
-                'controller_name' => 'TeamController',
-                'members' => $members,
-                'team' => $team,
-                'leaders' => $teamLeaders,
-               
-            ]);
-        }catch (Exception $e){
+        if ($form->isSubmitted() && $form->isValid()) {
+        
+            $this->teamService->addLeadersToTeam($teamLeaders);
+            
+            return $this->redirectToRoute('app_team');        
+        }
+
+        return $this->render('team/addLeaders.html.twig', [
+            'controller_name' => 'TeamController',
+            'form' => $form->createView(),
+            'teams' => $teamLeaders,
+        ]);
+    }
+
+    
+    #[Route('/team/see/workers', name:'team_see_workers')]
+    public function seeWorkers(Request $request) : Response {
+        $teamId = $request->get('teamId');
+    
+        $users = $this->teamService->showWorkers($teamId);
+
+        return $this->render('team/allMembers.html.twig', [
+            'members' => $users,
+            'teamId' => $teamId,
+        ]);
+        
+    }
+
+    #[Route('/team/{teamId}/{memberId}', name:'team_add_new_member', methods: ['POST'])]
+    public function addNewMember(Request $request, string $teamId, string $memberId) : Response {
+        try{
+            $this->teamService->addWorkerToTeam($memberId, $teamId);
+
+            return $this->redirectToRoute('app_team_members', ['teamId' => $teamId]);
+        }catch(Exception $e){
             return $this->render('error/error.html.twig', [
                 'controller_name' => 'TeamController',
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    #[Route('/team/members/{teamId}', name: 'app_team_members')]
+    public function showMembersInTeam(Request $request, string $teamId) {
+        $members = $this->teamService->showAllTeammates($teamId);
+
+        $team = $this->teamService->getById($teamId);
+        $teamLeaders[] = $this->teamService->showLeaders($team->getId());
+
+        return $this->render('team/members.html.twig', [
+            'members' => $members,
+            'team' => $team,
+            'leaders' => $teamLeaders,
+            
+        ]);
     }
 
     #[Route('/team/member/{memberId}', name: 'app_team_member')]
@@ -130,4 +177,5 @@ class TeamController extends AbstractController
             ]);
        }
     }
+
 }

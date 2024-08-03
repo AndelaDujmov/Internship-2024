@@ -1,4 +1,4 @@
-# Week 2
+# Week 2,3,4
 
 ## ERA Schema
 
@@ -145,9 +145,6 @@ Creation of new fixture: <br>
 
 ```bash
     php bin/console make:fixture
-
-    #run:
-    php bin/console doctrine:fixtures:load
 
 ```
 

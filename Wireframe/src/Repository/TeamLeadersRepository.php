@@ -22,19 +22,10 @@ class TeamLeadersRepository extends ServiceEntityRepository
         return $this->findBy(['team' => $team->getId()]);
     }
 
-    public function addLeaders(Team $team, ?User $teamLeader, ?User $projectLeader) : void {
-        $teamLeaders = new TeamLeaders();
-        $teamLeaders->setTeam($team);
-        $teamLeaders->setTeamLead($teamLeader);
-        $teamLeaders->setProjectLeader($projectLeader);
-    }
-
-    public function addLeader(TeamLeaders $teamLeaders, ?User $leader) : void {
-        if ($leader->hasRole(\App\Enum\Role::PROJECTLEADER->value)){
-            $teamLeaders->setProjectLeader($leader);
-        }else {
-            $teamLeaders->setTeamLead($leader);
-        }
+    public function addLeaders(TeamLeaders $teamLeaders) : void {
+       $em = $this->getEntityManager();
+       $em->persist($teamLeaders);
+       $em->flush();
     }
 
     public function deleteLeaders(Team $team) : void {

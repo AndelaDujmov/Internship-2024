@@ -116,7 +116,7 @@
                 {% for team in teamsLeaders %}
                     {% for leadteam in team %}
                         <tr>
-                            <td><a id="anchor" href="{{ path('app_team_members', {'teamId': leadteam.getTeam().getId()}) }}">{{ leadteam.getTeam().getName() }}</a></td>
+                            <td><a id="anchor" href="{{ path('app_team_members', {'teamId': leadteam.getTeam().getId() }) }}">{{ leadteam.getTeam().getName() }}</a></td>
                             <td>{{ leadteam.getTeam().getMembers()|length }}</td>
                             <td>{{ leadteam.getTeamLead().getUsername() }}</td>
                             <td>
