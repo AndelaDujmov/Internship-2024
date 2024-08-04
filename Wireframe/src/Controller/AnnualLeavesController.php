@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use App\Service\AnnualLeaveService;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\AnnualLeaveService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AnnualLeavesController extends AbstractController
 {
@@ -20,8 +20,11 @@ class AnnualLeavesController extends AbstractController
     #[Route('/annual/leaves', name: 'app_annual_leaves')]
     public function index(): Response
     {
+        //ako je korisnik admin, vidjet ćemo sve a ako nije vidjet ćemo samo za usere u timu
+        $annualRequests = $this->annualLeaveService->getAll();
         return $this->render('annual_leaves/index.html.twig', [
             'controller_name' => 'AnnualLeavesController',
+            'requests' => $annualRequests,
         ]);
     }
 

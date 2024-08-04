@@ -26,12 +26,8 @@ class UserManagementService {
         return $this->userRepository->findAllByRole($roleId);
     }
 
-    public function registrateUser(User $user){
-        
-    }
-
-    public function loginUser(){
-
+    public function getRoles() : array {
+        return [\App\Enum\Role::WORKER->value, \App\Enum\Role::TEAMLEADER->value, \App\Enum\Role::PROJECTLEADER->value];
     }
 
 }

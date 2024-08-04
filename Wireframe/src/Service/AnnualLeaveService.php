@@ -17,6 +17,10 @@ class AnnualLeaveService {
         $this->userRepository = $userRepository;
     }
 
+    public function getAll(){
+        return $this->requestForALRepository->getAll();
+    }
+
     public function createRequestForAL(string $userId, string $start, string $end, ?string $reason=null) : bool {
         $user = $this->userRepository->getUserById($userId) ?: new \Exception("User not found");
         $requestForAL = new RequestForAL();
@@ -42,27 +46,23 @@ class AnnualLeaveService {
     }
 
     public function validateRequestForAL(string $requestId, ?string $teamLeadId=null, ?string $projectLeadId=null) : void {
-        $daysLeft = 
+    
         $alRequest = $this->requestForALRepository->findById($requestId);
         $teamlead = $teamLeadId != null ? $this->userRepository->find($teamLeadId) : null;
         $projectlead = $projectLeadId != null ? $this->userRepository->find($projectLeadId) : null;
 
-        if ($teamlead){
+        if ($teamlead && !$alRequest->getTeamLeader()){
             $alRequest->setTeamLeader($teamlead);
         }
 
-        if ($projectLeadId){
+        if ($projectLeadId && !$alRequest->getProjectLeader()){
             $alRequest->setProjectLeader($projectlead);
         }
 
         if ($alRequest->getTeamLeader() != null && $alRequest->getProjectLeader() != null){
             $alRequest->setStatus(\App\Enum\Status::COMPLETED->value);
-            $daysInAL = $alRequest->getEnd()->diff($alRequest->getStart())->days;
-            #$al->setTotalDays($al->get);
-
         }
            
-        
         if  ($alRequest->getTeamLeader() != null && $alRequest->getProjectLeader() != null) 
             $alRequest->setStatus(\App\Enum\Status::CANCELLED->value);
         
