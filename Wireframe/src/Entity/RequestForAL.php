@@ -27,9 +27,7 @@ class RequestForAL
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reason = null;
-      /**
-     * @ORM\Column(type="string", length=20)
-     */
+    #[ORM\Column(length: 20, nullable: true)]
     private string $status;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]

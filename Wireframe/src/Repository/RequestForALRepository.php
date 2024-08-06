@@ -49,6 +49,17 @@ class RequestForALRepository extends ServiceEntityRepository
                     ->getResult()
                     ;
     }
+    
+    public function findByUsers(array $ids)
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.worker IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->orderBy('r.end', 'DESC')
+            ->addOrderBy('r.start', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
     //    /**
     //     * @return RequestForAL[] Returns an array of RequestForAL objects

@@ -22,6 +22,11 @@ class UserManagementService {
         return $this->userRepository->find($id);
     }
 
+    public function deleteUser(int $id) : void {
+        $user = $this->getUserById($id);
+        $this->userRepository->delete($user);
+    }
+
     public function getUsersByRole(int $roleId) : array {
         return $this->userRepository->findAllByRole($roleId);
     }

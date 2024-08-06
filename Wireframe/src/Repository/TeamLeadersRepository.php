@@ -28,6 +28,15 @@ class TeamLeadersRepository extends ServiceEntityRepository
        $em->flush();
     }
 
+    public function getTeamsByProjectLeader(string $leaderId) : array {
+        return $this->findBy(['projectLeader'=> $leaderId]);
+    }
+
+
+    public function getTeamsByTeamLeader(string $leaderId) : array {
+        return $this->findBy(['teamLead'=> $leaderId]);
+    }
+
     public function deleteLeaders(Team $team) : void {
         $teamLeaders = $this->showLeaders($team);
         $em = $this->getEntityManager();

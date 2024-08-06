@@ -6,19 +6,47 @@ use App\Entity\AnnualLeave;
 use App\Entity\RequestForAL;
 use App\Repository\AnnualLeaveRepository;
 use App\Repository\RequestForALRepository;
+use App\Repository\TeamLeadersRepository;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class AnnualLeaveService {
     private $userRepository;
     private $requestForALRepository;
+    private $teamLeadersRepository;
 
-    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository) {
+    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamLeadersRepository $teamLeadersRepository) {
         $this->requestForALRepository = $alReqRepo;
         $this->userRepository = $userRepository;
+        $this->teamLeadersRepository = $teamLeadersRepository;
     }
 
-    public function getAll(){
-        return $this->requestForALRepository->findAll();
+    public function getAll(UserInterface $currentUser) : array {
+        $roles = $currentUser->getRoles();
+        $user = $this->userRepository->getUserByIdentifier($currentUser->getUserIdentifier());
+        $annualLeaves = [];
+
+        if (in_array(\App\Enum\Role::PROJECTLEADER->value, $roles) || in_array(\App\Enum\Role::ADMIN->value, $roles)) 
+            $annualLeaves = $this->requestForALRepository->findAll();
+        else if (in_array(\App\Enum\Role::TEAMLEADER->value, $roles)){
+            $teams = $this->teamLeadersRepository->getTeamsByTeamLeader($user->getId());
+            $memberIds = [];
+           
+            foreach ($teams as $team){
+                $team = $team->getTeam();
+                $members = $team->getMembers();
+
+                foreach ($members as $member){
+                    $memberIds[] = $member->getId();
+                }
+            }
+            $annualLeaves = $this->requestForALRepository->findByUsers($memberIds);
+        }
+        else{
+            $annualLeaves = $this->requestForALRepository->findByUser($user->getId());
+        }
+           
+        return $annualLeaves;
     }
 
     public function createRequestForAL(string $userId, string $start, string $end, ?string $reason=null) : bool {
