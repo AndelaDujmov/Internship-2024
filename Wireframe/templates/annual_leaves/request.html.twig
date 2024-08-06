@@ -1,0 +1,110 @@
+{# annual_leaves/request.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Annual Leave Request{% endblock %}
+
+{% block body %}
+<style>
+    .container {
+        width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 1em;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1em;
+    }
+
+    th, td {
+        padding: 0.75em;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    .btn-success {
+        background-color: #28a745; /* Green */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+        text-align: center;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .btn-success:hover {
+        background-color: #218838; 
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333; 
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px; 
+    }
+</style>
+
+<div class="container">
+    <h1>Annual Leave Request</h1>
+    
+    <table>
+        <tr>
+            <th>Start Date</th>
+            <td>{{ leave.getStart()|date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <th>End Date</th>
+            <td>{{ leave.getEnd()|date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <th>Reason</th>
+            <td>{{ leave.getReason() }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>{{ leave.getStatus() }}</td>
+        </tr>
+        <tr>
+            <th>Date of Processing</th>
+            <td>{{ leave.getDateOfProcessing()|date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <th>Worker</th>
+            <td>{{ leave.getWorker().getUsername() }}</td>
+        </tr>
+    </table>
+
+    {% if is_granted('ROLE_TEAMLEADER') or is_granted('ROLE_PROJECTLEADER') %}
+    <div class="button-group">
+        <form method="get" action="{{ path('app_annual_leaves_accept', {'id': leave.getId()}) }}">
+            <button type="submit"  class="btn-success">Accept</button>
+        </form>
+        <form method="get" action="{{ path('app_annual_leaves_decline', {'id': leave.getId()}) }}">
+            <button type="submit" class="btn-danger">Decline</button>
+        </form>
+        </div>  
+    {% endif %}
+</div>
+{% endblock %}

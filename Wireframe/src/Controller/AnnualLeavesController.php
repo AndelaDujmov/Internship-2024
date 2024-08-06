@@ -58,13 +58,37 @@ class AnnualLeavesController extends AbstractController
         }
     }
 
-    #[Route('/annual/leaves/request/:id', name: 'app_annual_leaves_process')]
-    public function processRequest(string $id) : Response {
+    #[Route('/annual/leaves/request/{requestId}', name:'app_annual_leaves_check')]
+    public function checkRequest(Request $request, string $requestId) : Response {
+        try{
+            $annualLeave = $this->annualLeaveService->getAnnualRequest($requestId);
+            return $this->render('annual_leaves/request.html.twig', [
+                'controller_name' => 'AnnualLeavesController',
+                'leave' => $annualLeave
+            ]);
+        } catch (Exception $e) {
+            return $this->render('error/error.html.twig', [
+                'controller_name' => 'TeamController',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    #[Route('/annual/leaves/request/{id}', name: 'app_annual_leaves_accept')]
+    public function accept(string $id) : Response {
+       
+        $userID = $this->getUser()->getUserIdentifier();
+        
+        $this->annualLeaveService->validateRequestForAL( $id, $userID );
+
+        return $this->redirectToRoute('app_annual_leaves_check', ['requestId' => $id]);
+    }
+
+    #[Route('/annual/leaves/request/{id}', name: 'app_annual_leaves_decline')]
+    public function decline(string $id) : Response {
         $this->annualLeaveService->validateRequestForAL( $id );
-        return $this->render('annual_leaves/request.html.twig', [
-            'controller_name' => 'AnnualLeavesController',
-            
-        ]);
+        
+        return $this->redirectToRoute('app_annual_leaves_check', ['requestId' => $id]);
     }
 
 }

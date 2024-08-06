@@ -98,6 +98,18 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
         ;
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            // If the role is ROLE_WORKER, make vacationDays required
+            if (isset($data['role']) && $data['role'] === \App\Enum\Role::WORKER->value) {
+                $form->add('vacationDays', IntegerType::class, [
+                    'label' => 'Vacation Days',
+                    'required' => true, // Make vacationDays required for workers
+                ]);
+            }
+        });
     }
 
 

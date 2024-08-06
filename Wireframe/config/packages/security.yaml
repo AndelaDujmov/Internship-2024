@@ -39,6 +39,6 @@ security:
     access_control:
         - { path: ^/teams, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/teams/create, roles: ROLE_PROJECTLEADER }
-        - { path: ^/users, roles: ROLE_ADMIN }
+        - { path: ^/user, roles: ROLE_ADMIN }
         - { path: ^/register, roles: ROLE_ADMIN }
         - { path: ^/annual/leaves, roles: IS_AUTHENTICATED_FULLY }

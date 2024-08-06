@@ -110,7 +110,6 @@
             </thead>
             <tbody>
                 {% for request in requests %}
-                
                     <tr>
                         <td>{{ request.getStart() | date('Y-m-d H:i') }} - {{ request.getEnd() | date('Y-m-d H:i') }}</td>
                         <td>{{ request.getReason() }}</td>
@@ -131,6 +130,7 @@
                         </td>
                     
                     </tr>
+                
                 {% endfor %}
             </tbody>
         </table>

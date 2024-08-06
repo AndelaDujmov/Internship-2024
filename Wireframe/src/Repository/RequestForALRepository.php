@@ -29,7 +29,6 @@ class RequestForALRepository extends ServiceEntityRepository
 
     public function update(RequestForAL $requestForAL){
         $em = $this->getEntityManager();
-        $em->persist($requestForAL);
         $em->flush();
     }
 

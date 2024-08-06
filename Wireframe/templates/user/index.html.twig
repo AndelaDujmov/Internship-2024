@@ -96,7 +96,7 @@
 
 <div class="example-wrapper">
     <div class="table-header">
-        <h1>Teams</h1>
+        <h1>Users</h1>
         <a href="{{ path('app_register') }}" class="icon-wrapper">
             <span class="icon">+</span>
         </a>
@@ -119,6 +119,10 @@
                             <form method="get" action="{{ path('app_user_delete') }}" >
                                 <input type="hidden" name="id" value="{{ user.getId() }}"/>
                                 <button type="submit">Remove</button>
+                            </form>
+                            <form method="get" action="{{ path('app_user_edit', {'id': user.getId()}) }}" >
+                                <input type="hidden" name="id" value="{{ user.getId() }}"/>
+                                <button type="submit">Edit</button>
                             </form>
                         </td>
                     </tr>

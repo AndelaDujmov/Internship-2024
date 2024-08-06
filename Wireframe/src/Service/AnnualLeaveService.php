@@ -7,17 +7,20 @@ use App\Entity\RequestForAL;
 use App\Repository\AnnualLeaveRepository;
 use App\Repository\RequestForALRepository;
 use App\Repository\TeamLeadersRepository;
+use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AnnualLeaveService {
     private $userRepository;
+    private $teamRepository;
     private $requestForALRepository;
     private $teamLeadersRepository;
 
-    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamLeadersRepository $teamLeadersRepository) {
+    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamRepository $teamRepository, TeamLeadersRepository $teamLeadersRepository) {
         $this->requestForALRepository = $alReqRepo;
         $this->userRepository = $userRepository;
+        $this->teamRepository = $teamRepository;
         $this->teamLeadersRepository = $teamLeadersRepository;
     }
 
@@ -28,25 +31,30 @@ class AnnualLeaveService {
 
         if (in_array(\App\Enum\Role::PROJECTLEADER->value, $roles) || in_array(\App\Enum\Role::ADMIN->value, $roles)) 
             $annualLeaves = $this->requestForALRepository->findAll();
-        else if (in_array(\App\Enum\Role::TEAMLEADER->value, $roles)){
+        /*else if (in_array(\App\Enum\Role::TEAMLEADER->value, $roles)){
             $teams = $this->teamLeadersRepository->getTeamsByTeamLeader($user->getId());
             $memberIds = [];
            
             foreach ($teams as $team){
-                $team = $team->getTeam();
-                $members = $team->getMembers();
+                $teamVar = $this->teamRepository->find($team);
+                #var_dump($team);
+                $members = $teamVar->getMembers();
 
                 foreach ($members as $member){
                     $memberIds[] = $member->getId();
                 }
             }
-            $annualLeaves = $this->requestForALRepository->findByUsers($memberIds);
-        }
+            return $teams;
+        }*/
         else{
             $annualLeaves = $this->requestForALRepository->findByUser($user->getId());
         }
            
         return $annualLeaves;
+    }
+
+    public function getAnnualRequest(string $id) : RequestForAL {
+        return $this->requestForALRepository->findById($id) ?: throw new \Exception("Unable to find request");
     }
 
     public function createRequestForAL(string $userId, string $start, string $end, ?string $reason=null) : bool {
@@ -79,25 +87,24 @@ class AnnualLeaveService {
         return $user->getVacationDays();
     }
 
-    public function validateRequestForAL(string $requestId, ?string $teamLeadId=null, ?string $projectLeadId=null) : void {
+    public function validateRequestForAL(string $requestId, ?string $id=null ) : void {
     
         $alRequest = $this->requestForALRepository->findById($requestId);
-        $teamlead = $teamLeadId != null ? $this->userRepository->find($teamLeadId) : null;
-        $projectlead = $projectLeadId != null ? $this->userRepository->find($projectLeadId) : null;
-
-        if ($teamlead && !$alRequest->getTeamLeader()){
-            $alRequest->setTeamLeader($teamlead);
+        $member1 = $this->userRepository->getUserByIdentifier($id);
+       
+        if ($member1 && !$alRequest->getTeamLeader() && in_array(\App\Enum\Role::TEAMLEADER->value, $member1->getRoles())){
+            $alRequest->setTeamLeader($member1);
         }
 
-        if ($projectLeadId && !$alRequest->getProjectLeader()){
-            $alRequest->setProjectLeader($projectlead);
+        else if ($member1 && !$alRequest->getTeamLeader() && in_array(\App\Enum\Role::PROJECTLEADER->value, $member1->getRoles())){
+            $alRequest->setProjectLeader($member1);
         }
 
         if ($alRequest->getTeamLeader() != null && $alRequest->getProjectLeader() != null){
             $alRequest->setStatus(\App\Enum\Status::COMPLETED->value);
         }
            
-        if  ($alRequest->getTeamLeader() != null && $alRequest->getProjectLeader() != null) 
+        if  ($alRequest->getTeamLeader() == null && $alRequest->getProjectLeader() == null) 
             $alRequest->setStatus(\App\Enum\Status::CANCELLED->value);
         
         $alRequest->setDateOfProcessing(new \DateTime());

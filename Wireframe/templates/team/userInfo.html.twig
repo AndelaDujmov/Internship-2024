@@ -6,6 +6,32 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .vacation-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1em;
+        background-color: wheat;
+        width: 100%;
+        padding-right: 20px;
+        height: 60px;
+        border-radius: 12px;
+    }
+
+    .vacation-info p {
+        margin: 0;
+        flex: 1;
+    }
+
+    .info-icon {
+        margin-left: 10px; 
+        cursor: pointer;
+        color: #007bff; 
+        font-weight: bold;
+    }
+
+    .info-icon:hover {
+        color: #0056b3; 
+    }
 </style>
 
 <div class="example-wrapper">
@@ -16,8 +42,11 @@
     <p>Email: {{ user.getEmail() }}</p>
     <p>Annual Leaves:</p>
     {% for vacation in vacations %}
-        <p>{{ vacation.getEnd().format('Y-m-d, D') }}</p>
-        <p>{{ vacation.getReason() }}</p>
+        <div class="vacation-info">
+            <p>{{ vacation.getStart().format('Y-m-d, D') }} - {{ vacation.getEnd().format('Y-m-d, D') }}</p>
+            <a  id="anchor" href="{{ path('app_annual_leaves_check', {'requestId': vacation.getId() }) }}"><i class="info-icon" title="More information">i</i></a>
+        </div>
     {% endfor %}
+
 </div>
 {% endblock %}
