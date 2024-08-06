@@ -8,9 +8,17 @@ use App\Entity\User;
 use App\Entity\Worker;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $administrator = new User();
@@ -18,9 +26,13 @@ class AppFixtures extends Fixture
         $administrator->setFirstName("Andjela");
         $administrator->setLastName("Dujmov");
         $administrator->setEmail("andjeladujmov@gmail.com");
-        $administrator->setRoles([\App\Enum\Role::ADMIN->value]);
+        $administrator->setRoles([\App\Enum\Role::ADMIN->value, \App\Enum\Role::USER]);
         $administrator->setUsername("admin12");
-        $administrator->setPassword("123456");
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $administrator,
+            '123456'
+        );
+        $administrator->setPassword($hashedPassword);
         $administrator->setVerified(true);
 
         $manager->persist($administrator);

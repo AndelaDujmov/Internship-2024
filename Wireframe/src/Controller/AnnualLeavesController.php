@@ -20,8 +20,19 @@ class AnnualLeavesController extends AbstractController
     #[Route('/annual/leaves', name: 'app_annual_leaves')]
     public function index(): Response
     {
+        $user = $this->getUser();
+        $roles = $user->getRoles();
+        $annualRequests = [];
         //ako je korisnik admin, vidjet ćemo sve a ako nije vidjet ćemo samo za usere u timu
-        $annualRequests = $this->annualLeaveService->getAll();
+
+        if(in_array(\App\Enum\Role::ADMIN->value, $roles))
+            $annualRequests = $this->annualLeaveService->getAll();
+        else if (in_array(\App\Enum\Role::PROJECTLEADER->value, $roles) || 
+                 in_array(\App\Enum\Role::TEAMLEADER->value, $roles))
+            $annualRequests = $this->annualLeaveService->getAllByTeam($user->getUserIdentifier());
+        else
+            $annualRequests = $this->annualLeaveService->getAllByWorker($user->getUserIdentifier());
+       
         return $this->render('annual_leaves/index.html.twig', [
             'controller_name' => 'AnnualLeavesController',
             'requests' => $annualRequests,
@@ -30,8 +41,7 @@ class AnnualLeavesController extends AbstractController
 
     #[Route('/annual/leaves/request/create', name: 'app_annual_leaves_create', methods: ['GET', 'POST'])]
     public function createRequest(Request $request) : Response {
-        #$userId = $request->get('id');
-        $userId = 'de668405-f6a8-4940-884b-a5361c24ddfa'; //id trenutno logiranog usera
+        $userId = $this->getUser()->getUserIdentifier();
         $start = $request->get('start');
         $end = $request->get('end');
         $reason = $request->get('reason');
@@ -47,6 +57,7 @@ class AnnualLeavesController extends AbstractController
         try{
             return $this->render('annual_leaves/create.html.twig', [
                 'controller_name' => 'AnnualLeavesController',
+                'vacation_days' => $this->annualLeaveService->returnUsersVacationDays($userId),
             ]);
         }catch (Exception $e) {
             return $this->render('error/error.html.twig', [
@@ -61,6 +72,7 @@ class AnnualLeavesController extends AbstractController
         $this->annualLeaveService->validateRequestForAL( $id );
         return $this->render('annual_leaves/request.html.twig', [
             'controller_name' => 'AnnualLeavesController',
+            
         ]);
     }
 

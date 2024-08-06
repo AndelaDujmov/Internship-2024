@@ -1,13 +1,16 @@
-# see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
-    #csrf_protection: true
+    csrf_protection: true
+    session:
+        # Default session settings here
+        # Uncomment and configure as needed
+        # handler_id: ~
+        cookie_secure: auto
+        cookie_samesite: lax
 
-    # Note that the session will be started ONLY if you read or write from it.
-    session: true
-
-    #esi: true
-    #fragments: true
+    # Uncomment if using ESI or fragments
+    # esi: true
+    # fragments: true
 
 when@test:
     framework:

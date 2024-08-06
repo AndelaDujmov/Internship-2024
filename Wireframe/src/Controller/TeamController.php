@@ -26,13 +26,16 @@ class TeamController extends AbstractController
     #[Route('/team', name: 'app_team')]
     public function index(): Response
     {
-       try{
-            $all = TeamService::getAll();
+        $all = TeamService::getAll() ;
 
-            $teamLeaders = [];
+        $teamLeaders = [];
+        
+        try{
 
-            foreach ($all as $team) {
-                $teamLeaders[] = $this->teamService->showLeaders($team->getId());
+            if($all){
+                foreach ($all as $team) {
+                    $teamLeaders[] = $this->teamService->showLeaders($team->getId());
+                }
             }
 
             return $this->render('team/index.html.twig', [

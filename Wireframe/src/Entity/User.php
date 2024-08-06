@@ -30,8 +30,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
+     /**
+      * @var string The hashed password
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(min=8)
+     * @Assert\Regex(
+     *     pattern="/[A-Z]/",
+     *     message="Password must contain at least one uppercase letter."
+     * )
+     * @Assert\Regex(
+     *     pattern="/[\W_]/",
+     *     message="Password must contain at least one special character."
+     * )
      */
     #[ORM\Column]
     private ?string $password = null;

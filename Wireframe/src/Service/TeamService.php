@@ -29,10 +29,10 @@ class TeamService {
         self::$teamRepository->create($team);
     }
 
-    public static function getAll() : array {
-        $teams = self::$teamRepository->findAll();
+    public static function getAll() : ?array {
+        $teams = self::$teamRepository->findAll() ?: [];
 
-        return $teams ?: throw new \Exception("Teams not found");
+        return $teams;
     }
 
     public static function showAllTeammates(string $idTeam) : array {

@@ -18,11 +18,11 @@ class AnnualLeaveService {
     }
 
     public function getAll(){
-        return $this->requestForALRepository->getAll();
+        return $this->requestForALRepository->findAll();
     }
 
     public function createRequestForAL(string $userId, string $start, string $end, ?string $reason=null) : bool {
-        $user = $this->userRepository->getUserById($userId) ?: new \Exception("User not found");
+        $user = $this->userRepository->getUserByIdentifier($userId) ?: new \Exception("User not found");
         $requestForAL = new RequestForAL();
 
         $startDate = $this->parseToDatetime($start);
@@ -43,6 +43,12 @@ class AnnualLeaveService {
         $this->requestForALRepository->create($requestForAL);
 
         return true;
+    }
+
+    public function returnUsersVacationDays(string $userIdentificator) : ?int {
+        $user = $this->userRepository->getUserByIdentifier($userIdentificator);
+
+        return $user->getVacationDays();
     }
 
     public function validateRequestForAL(string $requestId, ?string $teamLeadId=null, ?string $projectLeadId=null) : void {

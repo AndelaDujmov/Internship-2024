@@ -18,7 +18,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
+    public function __construct()
     {
     }
 
@@ -30,7 +30,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -38,12 +37,13 @@ class RegistrationController extends AbstractController
                 )
             );
             
-            $user->setRoles([$form->get('role')->getData()]);
+            $user->setRoles([\App\Enum\Role::USER->value, $form->get('role')->getData()]);
+            $user->setVacationDays(20);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('_profiler_home');
+            return $this->redirectToRoute('app_team');
         }
 
         return $this->render('registration/register.html.twig', [

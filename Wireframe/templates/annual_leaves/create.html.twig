@@ -49,6 +49,7 @@
 
     <div class="form-container">
         <h1>Create Annual Leave Request</h1>
+        <h3>You have in total: <b>{{ vacation_days }} days.</b></h3>
         <form method="post" action="{{ path('app_annual_leaves_create') }}">
             <div class="form-group">
                 <label for="start">Start Date</label>
