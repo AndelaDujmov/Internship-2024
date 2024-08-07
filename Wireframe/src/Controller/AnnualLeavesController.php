@@ -74,7 +74,7 @@ class AnnualLeavesController extends AbstractController
         }
     }
 
-    #[Route('/annual/leaves/request/{id}', name: 'app_annual_leaves_accept')]
+    #[Route('/annual/leaves/accept/{id}', name: 'app_annual_leaves_accept')]
     public function accept(string $id) : Response {
        
         $userID = $this->getUser()->getUserIdentifier();
@@ -84,7 +84,7 @@ class AnnualLeavesController extends AbstractController
         return $this->redirectToRoute('app_annual_leaves_check', ['requestId' => $id]);
     }
 
-    #[Route('/annual/leaves/request/{id}', name: 'app_annual_leaves_decline')]
+    #[Route('/annual/leaves/decline/{id}', name: 'app_annual_leaves_decline')]
     public function decline(string $id) : Response {
         $this->annualLeaveService->validateRequestForAL( $id );
         

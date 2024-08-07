@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+        <style>
+            /* Simple CSS for navigation bar */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                align-content: center;
+                align-items:center;
+            }
+            .button-container {
+                margin: 20px;
+            }
+            .button {
+                background-color: #007bff;
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .button:hover {
+                background-color: #0056b3;
+            }
+        </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+
+        {% block body %}
+        <h1>Welcome to Vacation Scheduler!</h1>
+        <h2>To continue enjoying all the features, please log in.</h2>
+        <div class="button-container">
+            <a href="{{ path('app_login') }}" class="button">Login</a>
+        </div>
+        {% endblock %}
+    </body>
+</html>

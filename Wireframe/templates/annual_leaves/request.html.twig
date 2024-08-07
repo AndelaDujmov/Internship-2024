@@ -99,12 +99,12 @@
     {% if is_granted('ROLE_TEAMLEADER') or is_granted('ROLE_PROJECTLEADER') %}
     <div class="button-group">
         <form method="get" action="{{ path('app_annual_leaves_accept', {'id': leave.getId()}) }}">
-            <button type="submit"  class="btn-success">Accept</button>
+            <button type="submit" class="btn-success">Accept</button>
         </form>
         <form method="get" action="{{ path('app_annual_leaves_decline', {'id': leave.getId()}) }}">
             <button type="submit" class="btn-danger">Decline</button>
         </form>
-        </div>  
+    </div>  
     {% endif %}
 </div>
 {% endblock %}

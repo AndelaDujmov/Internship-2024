@@ -32,6 +32,19 @@
                 background-color: #4CAF50;
                 color: white;
             }
+            .navbar .logout {
+                position: absolute;
+                right: 0;
+                top: 0;
+                background-color: #f44336;
+                color: white;
+                padding: 14px 20px;
+                text-decoration: none;
+                border: none;
+            }
+            .navbar .logout:hover {
+                background-color: #e53935;
+            }
         </style>
         {% endblock %}
 
@@ -43,8 +56,12 @@
         <div class="navbar">
             <a href="/" class="active">Home</a>
             <a href="/team">Teams</a>
-            <a href="/services">Services</a>
-            <a href="/contact">Contact</a>
+            <a href="/annual/leaves">Annual Leaves</a>
+            <a href="/user">Users</a>
+            <a href="/annual/leaves/request/create">Vacation Request</a>
+            <a>Calendar</a>
+            <a href="/logout" class="logout">Logout</a>
+     
         </div>
 
         {% block body %}
