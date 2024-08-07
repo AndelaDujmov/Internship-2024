@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\Entity\AnnualLeave;
+use App\Entity\Notification;
 use App\Entity\RequestForAL;
 use App\Repository\AnnualLeaveRepository;
+use App\Repository\NotificationRepository;
 use App\Repository\RequestForALRepository;
 use App\Repository\TeamLeadersRepository;
 use App\Repository\TeamRepository;
@@ -16,12 +18,14 @@ class AnnualLeaveService {
     private $teamRepository;
     private $requestForALRepository;
     private $teamLeadersRepository;
+    private $notificationRepository;
 
-    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamRepository $teamRepository, TeamLeadersRepository $teamLeadersRepository) {
+    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamRepository $teamRepository, TeamLeadersRepository $teamLeadersRepository, NotificationRepository $notificationRepository) {
         $this->requestForALRepository = $alReqRepo;
         $this->userRepository = $userRepository;
         $this->teamRepository = $teamRepository;
         $this->teamLeadersRepository = $teamLeadersRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function getAll(UserInterface $currentUser) : array {
@@ -102,6 +106,12 @@ class AnnualLeaveService {
 
         if ($alRequest->getTeamLeader() != null && $alRequest->getProjectLeader() != null){
             $alRequest->setStatus(\App\Enum\Status::COMPLETED->value);
+
+            $notification = new Notification();
+            $notification->setCreatedAt(new \DateTime());
+            $notification->setMessage('Your request for vacation has been approved!');
+            $notification->setUser($alRequest->getWorker());
+            $this->notificationRepository->add($notification);
         }
            
         if  ($alRequest->getTeamLeader() == null && $alRequest->getProjectLeader() == null) 

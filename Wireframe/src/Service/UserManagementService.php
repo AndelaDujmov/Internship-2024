@@ -3,15 +3,18 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Repository\NotificationRepository;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 
 class UserManagementService {
 
     private $userRepository;
+    private $notificationRepository;
 
-    public function __construct(UserRepository $userRepository) {
+    public function __construct(UserRepository $userRepository, NotificationRepository $notificationRepository) {
         $this->userRepository = $userRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function getUsers() : array {
@@ -35,6 +38,11 @@ class UserManagementService {
         $user->setPassword($password ?? $user->getPassword());
         $user->getRoles()[] = $role ?? null;
         $this->userRepository->updateUser();
+    }
+
+    public function getNotifications(string $userIdentificator) : array {
+        $user = $this->userRepository->getUserByIdentifier($userIdentificator);
+        return $this->notificationRepository->getAllByUser($user);    
     }
 
     public function getRoles() : array {

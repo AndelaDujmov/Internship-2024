@@ -37,6 +37,7 @@ class Notification
     public function setUser(?User $user): static
     {
         $this->user = $user;
+        $user->getNotifications()->add($this);
 
         return $this;
     }

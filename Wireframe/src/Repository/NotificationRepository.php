@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Notification;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -11,9 +13,26 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NotificationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $userRepository;
+
+    public function __construct(ManagerRegistry $registry, UserRepository $userRepository)
     {
         parent::__construct($registry, Notification::class);
+        $this->userRepository = $userRepository;
+    }
+
+    public function getManager() : EntityManagerInterface {
+        return $this->getEntityManager();
+    }
+
+    public function add(Notification $notification): void {
+        $this->_em->persist($notification);
+        $this->_em->flush();
+        
+    }
+
+    public function getAllByUser(User $user) : array {
+        return $this->findBy(["user"=> $user->getId()]);
     }
 
 //    /**
