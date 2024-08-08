@@ -1,31 +1,88 @@
-
-
-
-
 {% block body %}
 
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .example-wrapper {
+        margin: 1em auto;
+        max-width: 400px;
+        width: 90%;
+        font: 16px/1.5 sans-serif;
+        padding: 1em;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f9f9f9;
+    }
+
+    .example-wrapper h1 {
+        font-size: 24px;
+        margin-bottom: 1em;
+    }
+
+    .example-wrapper label {
+        display: block;
+        margin: 0.5em 0 0.2em;
+        font-weight: bold;
+    }
+
+    .example-wrapper input[type="text"],
+    .example-wrapper input[type="password"] {
+        width: 100%;
+        padding: 0.8em;
+        margin: 0.2em 0 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box; 
+    }
+
+    .example-wrapper input[type="text"]:focus,
+    .example-wrapper input[type="password"]:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .example-wrapper button {
+        width: 100%;
+        padding: 0.8em;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .example-wrapper button:hover {
+        background-color: #0056b3;
+    }
+
+    .example-wrapper .error-message {
+        color: #d9534f;
+        background-color: #f2dede;
+        padding: 1em;
+        border: 1px solid #ebccd1;
+        border-radius: 4px;
+        margin-bottom: 1em;
+    }
 </style>
 
 <div class="example-wrapper">
     {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="error-message">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
     
-    <h1>Login</h1><br>
+    <h1>Login</h1>
     <form action="{{ path('app_login') }}" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
         <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" required><br>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" required>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" required><br>
+        <input type="password" id="password" name="_password" required>
 
-        <button type="submit">login</button>
+        <button type="submit">Login</button>
     </form>
-
 </div>
+
 {% endblock %}

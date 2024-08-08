@@ -94,7 +94,7 @@ class AnnualLeaveService {
     public function validateRequestForAL(string $requestId, ?string $id=null ) : void {
     
         $alRequest = $this->requestForALRepository->findById($requestId);
-        $member1 = $this->userRepository->getUserByIdentifier($id);
+        $member1 = $id ? $this->userRepository->getUserByIdentifier($id) : null;
        
         if ($member1 && !$alRequest->getTeamLeader() && in_array(\App\Enum\Role::TEAMLEADER->value, $member1->getRoles())){
             $alRequest->setTeamLeader($member1);
@@ -102,6 +102,7 @@ class AnnualLeaveService {
 
         else if ($member1 && !$alRequest->getTeamLeader() && in_array(\App\Enum\Role::PROJECTLEADER->value, $member1->getRoles())){
             $alRequest->setProjectLeader($member1);
+
         }
 
         if ($alRequest->getTeamLeader() != null && $alRequest->getProjectLeader() != null){
@@ -109,15 +110,23 @@ class AnnualLeaveService {
 
             $notification = new Notification();
             $notification->setCreatedAt(new \DateTime());
-            $notification->setMessage('Your request for vacation has been approved!');
+            $notification->setMessage('Your request for vacation for period '. $alRequest->getEnd()->format('d-m-y') . ' - ' . $alRequest->getStart()->format('d-m-y') . ' has been approved!');
             $notification->setUser($alRequest->getWorker());
             $notification->setClosed(false);
             $this->notificationRepository->add($notification);
         }
            
-        if  ($alRequest->getTeamLeader() == null && $alRequest->getProjectLeader() == null) 
+        if  ($alRequest->getTeamLeader() == null && $alRequest->getProjectLeader() == null) {
             $alRequest->setStatus(\App\Enum\Status::CANCELLED->value);
-        
+
+            $notification = new Notification();
+            $notification->setCreatedAt(new \DateTime());
+            $notification->setMessage('Your request for vacation for period '. $alRequest->getEnd()->format('d-m-y') . ' - ' . $alRequest->getStart()->format('d-m-y') . ' has been rejected!');
+            $notification->setUser($alRequest->getWorker());
+            $notification->setClosed(false);
+            $this->notificationRepository->add($notification);
+        }
+
         $alRequest->setDateOfProcessing(new \DateTime());
 
         $this->requestForALRepository->update($alRequest);
