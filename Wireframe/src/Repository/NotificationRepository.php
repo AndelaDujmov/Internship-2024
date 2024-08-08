@@ -26,8 +26,8 @@ class NotificationRepository extends ServiceEntityRepository
     }
 
     public function add(Notification $notification): void {
-        $this->_em->persist($notification);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($notification);
+        $this->getEntityManager()->flush();
         
     }
 

@@ -24,6 +24,9 @@ class Notification
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\Column]
+    private ?bool $isClosed = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +65,18 @@ class Notification
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isClosed(): ?bool
+    {
+        return $this->isClosed;
+    }
+
+    public function setClosed(bool $isClosed): static
+    {
+        $this->isClosed = $isClosed;
 
         return $this;
     }

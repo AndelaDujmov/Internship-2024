@@ -26,7 +26,7 @@ class UserController extends AbstractController
             'users' => $users
         ]);
     }
-
+    
     #[Route('/user/delete', name: 'app_user_delete')]
     public function deleteUser(Request $request) : Response {
         $userId =  $request->get('id');

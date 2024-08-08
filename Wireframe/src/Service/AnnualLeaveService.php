@@ -111,6 +111,7 @@ class AnnualLeaveService {
             $notification->setCreatedAt(new \DateTime());
             $notification->setMessage('Your request for vacation has been approved!');
             $notification->setUser($alRequest->getWorker());
+            $notification->setClosed(false);
             $this->notificationRepository->add($notification);
         }
            
