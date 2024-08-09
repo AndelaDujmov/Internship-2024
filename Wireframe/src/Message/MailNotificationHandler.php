@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Message;
+
 use App\Message\MailNotification;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

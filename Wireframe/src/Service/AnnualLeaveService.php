@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\AnnualLeave;
 use App\Entity\Notification;
 use App\Entity\RequestForAL;
+use App\Message\MailNotification;
 use App\Repository\AnnualLeaveRepository;
 use App\Repository\NotificationRepository;
 use App\Repository\RequestForALRepository;
@@ -12,7 +13,9 @@ use App\Repository\TeamLeadersRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Notifier\Message\EmailMessage;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AnnualLeaveService {
@@ -22,14 +25,16 @@ class AnnualLeaveService {
     private $teamLeadersRepository;
     private $mailerService;
     private $notificationRepository;
+    private $bus;
 
-    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamRepository $teamRepository, TeamLeadersRepository $teamLeadersRepository, NotificationRepository $notificationRepository, MailerInterface $mailerInterface) {
+    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamRepository $teamRepository, TeamLeadersRepository $teamLeadersRepository, NotificationRepository $notificationRepository, MailerInterface $mailerInterface, MessageBusInterface $messageBusInterface) {
         $this->requestForALRepository = $alReqRepo;
         $this->userRepository = $userRepository;
         $this->teamRepository = $teamRepository;
         $this->teamLeadersRepository = $teamLeadersRepository;
         $this->notificationRepository = $notificationRepository;
         $this->mailerService = $mailerInterface;
+        $this->bus = $messageBusInterface;
     }
 
     public function getAll(UserInterface $currentUser) : array {
@@ -164,15 +169,8 @@ class AnnualLeaveService {
     }
 
     private function sendMail(string $email, string $subject, string $message): void {
-        
-        $email = (new Email())
-                ->from("andeladujmov9@gmail.com")
-                ->to("sopifof940@biscoine.com")
-                ->subject($subject)
-                ->text($message);
-        
-            $this->mailerService->send($email);
-        
+        $message = new MailNotification($email, $subject, $message);
+        $this->bus->dispatch($message);
     }
 
 }

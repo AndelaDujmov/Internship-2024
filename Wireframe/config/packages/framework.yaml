@@ -10,6 +10,10 @@ framework:
     messenger:
         transports:
             async: "%env(MESSENGER_TRANSPORT_DSN)%"
+          
+        routing:
+            # async is whatever name you gave your transport above
+            'App\Message\MailNotification': async
 
     # Uncomment if using ESI or fragments
     # esi: true
