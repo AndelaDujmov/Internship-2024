@@ -167,14 +167,12 @@ class AnnualLeaveService {
         
         $email = (new Email())
                 ->from("andeladujmov9@gmail.com")
-                ->to("andeladujmov3@gmail.com")
+                ->to("sopifof940@biscoine.com")
                 ->subject($subject)
                 ->text($message);
-        try{
+        
             $this->mailerService->send($email);
-        } catch (\Exception $e) {
-            
-        }
+        
     }
 
 }
