@@ -12,6 +12,7 @@ use App\Repository\TeamLeadersRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AnnualLeaveService {
@@ -130,7 +131,7 @@ class AnnualLeaveService {
             $notification->setUser($alRequest->getWorker());
             $notification->setClosed(false);
             $this->notificationRepository->add($notification);
-            $this->sendMail($notification->getMessage(), $alRequest->getWorker()->getEmail());
+            $this->sendMail($alRequest->getWorker()->getEmail(), "ACCEPTED",  $notification->getMessage());
 
         }
            
@@ -143,7 +144,7 @@ class AnnualLeaveService {
             $notification->setUser($alRequest->getWorker());
             $notification->setClosed(false);
             $this->notificationRepository->add($notification);
-            $this->sendMail($notification->getMessage(), $alRequest->getWorker()->getEmail());
+            $this->sendMail($alRequest->getWorker()->getEmail(), "DECLINED",  $notification->getMessage());
         }
 
         $alRequest->setDateOfProcessing(new \DateTime());
@@ -162,8 +163,18 @@ class AnnualLeaveService {
         }
     }
 
-    private function sendMail(string $email, string $message) : void {
-        $this->sendMail($email, $message);
+    private function sendMail(string $email, string $subject, string $message): void {
+        
+        $email = (new Email())
+                ->from("andeladujmov9@gmail.com")
+                ->to("andeladujmov3@gmail.com")
+                ->subject($subject)
+                ->text($message);
+        try{
+            $this->mailerService->send($email);
+        } catch (\Exception $e) {
+            
+        }
     }
 
 }

@@ -81,6 +81,7 @@ class AnnualLeavesController extends AbstractController
         
         $this->annualLeaveService->validateRequestForAL( $id, $userID );
 
+
         return $this->redirectToRoute('app_annual_leaves_check', ['requestId' => $id]);
     }
 
