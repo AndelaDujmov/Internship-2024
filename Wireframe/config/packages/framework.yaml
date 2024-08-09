@@ -7,6 +7,9 @@ framework:
         # handler_id: ~
         cookie_secure: auto
         cookie_samesite: lax
+    messenger:
+        transports:
+            async: "%env(MESSENGER_TRANSPORT_DSN)%"
 
     # Uncomment if using ESI or fragments
     # esi: true
