@@ -116,7 +116,7 @@
                         <td>{{ request.getStatus() }}</td>
                         <td>
                         {% if 'ROLE_WORKER' in app.user.roles %}
-                            <form method="get">
+                            <form method="get" action="{{ path('app_cancel_annual_leave', {'id': request.getId()}) }}">
                                 <input type="hidden" name="teamId" />
                                 <button type="submit">Cancel</button>
                             </form>

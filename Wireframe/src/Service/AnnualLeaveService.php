@@ -11,6 +11,7 @@ use App\Repository\RequestForALRepository;
 use App\Repository\TeamLeadersRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AnnualLeaveService {
@@ -18,14 +19,16 @@ class AnnualLeaveService {
     private $teamRepository;
     private $requestForALRepository;
     private $teamLeadersRepository;
+    private $mailerService;
     private $notificationRepository;
 
-    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamRepository $teamRepository, TeamLeadersRepository $teamLeadersRepository, NotificationRepository $notificationRepository) {
+    public function __construct(RequestForALRepository $alReqRepo, UserRepository $userRepository, TeamRepository $teamRepository, TeamLeadersRepository $teamLeadersRepository, NotificationRepository $notificationRepository, MailerInterface $mailerInterface) {
         $this->requestForALRepository = $alReqRepo;
         $this->userRepository = $userRepository;
         $this->teamRepository = $teamRepository;
         $this->teamLeadersRepository = $teamLeadersRepository;
         $this->notificationRepository = $notificationRepository;
+        $this->mailerService = $mailerInterface;
     }
 
     public function getAll(UserInterface $currentUser) : array {
@@ -85,6 +88,19 @@ class AnnualLeaveService {
         return true;
     }
 
+    public function declineRequest($id) {
+        $request = $this->requestForALRepository->findById($id);
+        $daysDiff = (int)$request->getEnd()->diff($request->getStart(), true)->days;
+
+        $user = $this->userRepository->getUserById($request->getWorker()->getId());
+        $user->setVacationDays($user->getVacationDays() + $daysDiff);
+
+        $this->userRepository->update($user->getVacationDays(), $user->getEmail());
+
+        if($request->getStatus() == \App\Enum\Status::PENDING->value) 
+            $this->requestForALRepository->delete($request);
+    }
+
     public function returnUsersVacationDays(string $userIdentificator) : ?int {
         $user = $this->userRepository->getUserByIdentifier($userIdentificator);
 
@@ -114,6 +130,8 @@ class AnnualLeaveService {
             $notification->setUser($alRequest->getWorker());
             $notification->setClosed(false);
             $this->notificationRepository->add($notification);
+            $this->sendMail($notification->getMessage(), $alRequest->getWorker()->getEmail());
+
         }
            
         if  ($alRequest->getTeamLeader() == null && $alRequest->getProjectLeader() == null) {
@@ -125,6 +143,7 @@ class AnnualLeaveService {
             $notification->setUser($alRequest->getWorker());
             $notification->setClosed(false);
             $this->notificationRepository->add($notification);
+            $this->sendMail($notification->getMessage(), $alRequest->getWorker()->getEmail());
         }
 
         $alRequest->setDateOfProcessing(new \DateTime());
@@ -141,6 +160,10 @@ class AnnualLeaveService {
         } catch (\Exception $e) {
             throw new \InvalidArgumentException("Invalid date format");
         }
+    }
+
+    private function sendMail(string $email, string $message) : void {
+        $this->sendMail($email, $message);
     }
 
 }

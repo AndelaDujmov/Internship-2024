@@ -91,4 +91,10 @@ class AnnualLeavesController extends AbstractController
         return $this->redirectToRoute('app_annual_leaves_check', ['requestId' => $id]);
     }
 
+    #[Route('/annual/leave/cancel/{id}', name:'app_cancel_annual_leave')]
+    public function cancelAnnualLeave(string $id) : Response {
+        $this->annualLeaveService->validateRequestForAL( $id );
+        return $this->redirectToRoute('app_annual_leaves_check', ['requestId' => $id]);
+    }
+
 }
