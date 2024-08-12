@@ -1,6 +1,77 @@
+{% extends 'base.html.twig' %}
 
+{% block title %}Register{% endblock %}
 
 {% block body %}
+<style>
+    form {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 1.5rem;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+        text-align: center;
+    }
+    
+    .alert {
+        margin-bottom: 1.5rem;
+        padding: 0.75rem 1.25rem;
+        border-radius: 4px;
+        color: #fff;
+        background-color: #dc3545; 
+        border: 1px solid transparent;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%; 
+        padding: 1rem;
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+    }
+</style>
+
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
@@ -9,18 +80,36 @@
 
     {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.firstName) }}
-        {{ form_row(registrationForm.lastName) }}
-        {{ form_row(registrationForm.vacationDays) }}
-        {{ form_row(registrationForm.role) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_start(registrationForm, { 'attr': { 'class': 'form' } }) }}
+        <div class="form-group">
+            {{ form_row(registrationForm.email, { 'attr': { 'class': 'form-control' } }) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(registrationForm.plainPassword, { 'attr': { 'class': 'form-control' } }, {
+                label: 'Password'
+            }) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(registrationForm.username, { 'attr': { 'class': 'form-control' } }) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(registrationForm.firstName, { 'attr': { 'class': 'form-control' } }) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(registrationForm.lastName, { 'attr': { 'class': 'form-control' } }) }}
+        </div>
+        {% if registrationForm.vacationDays is defined %}
+            <div class="form-group">
+                {{ form_row(registrationForm.vacationDays, { 'attr': { 'class': 'form-control' } }) }}
+            </div>
+        {% endif %}
 
+        <div class="form-group">
+            {{ form_row(registrationForm.role, { 'attr': { 'class': 'form-control' } }) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(registrationForm.agreeTerms) }}
+        </div>
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
 {% endblock %}

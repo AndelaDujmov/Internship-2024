@@ -28,7 +28,8 @@ class HomeController extends AbstractController
         else if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->render('home/index.html.twig', [
                 'controller_name' => 'HomeController',
-                'user' => $this->getUser()->getUserIdentifier()
+                'user' => $this->getUser()->getUserIdentifier(),
+                'user_role' => $this->getUser()->getRoles(),
             ]);
         } else {
             return $this->render('baseNull.html.twig', [
@@ -37,4 +38,6 @@ class HomeController extends AbstractController
         }
        
     }
+
+
 }

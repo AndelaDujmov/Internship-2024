@@ -223,6 +223,12 @@ In security.yaml
     #which means that only 3 attempts can happen
 ```
 
+### Mailtrap
+
+```bash
+    php bin/console messenger:consume async
+```
+
 ## Project Details
 
 **Entity dir :** src/Entity <br>

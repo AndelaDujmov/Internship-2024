@@ -28,18 +28,6 @@ class TeamLeadersRepository extends ServiceEntityRepository
        $em->flush();
     }
 
-    /*
-    public function getTeamsByTeamLeader(string $leaderId) : array {
-        $data = $this->createQueryBuilder('t')
-                    ->select('t.team')
-                    ->andWhere('t.teamLead = :val')
-                    ->setParameter('val', $leaderId)
-                    ->getQuery()
-                    ->getScalarResult();
-
-        return array_map(fn($data) => $data['id'], $data);
-    }*/
-
     public function deleteLeaders(Team $team) : void {
         $teamLeaders = $this->showLeaders($team);
         $em = $this->getEntityManager();

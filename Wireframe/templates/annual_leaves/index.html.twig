@@ -121,12 +121,6 @@
                                 <button type="submit">Cancel</button>
                             </form>
                         {% endif %}
-                        {% if 'ROLE_ADMIN' in app.user.roles or 'ROLE_TEAMLEADER' in app.user.roles or 'ROLE_PROJECTLEADER' in app.user.roles %}
-                            <form method="post" >
-                                <input type="hidden" name="_method" value="DELETE" />
-                                <button type="submit">Approve</button>
-                            </form>
-                        {% endif %}
                         </td>
                     
                     </tr>

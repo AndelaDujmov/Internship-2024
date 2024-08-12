@@ -19,7 +19,6 @@ class MailNotificationHandler {
     public function __invoke(MailNotification $mail)
     {
         $email = (new Email())
-        ->from("andeladujmov9@gmail.com")
         ->to($mail->getTo())
         ->subject($mail->getSubject())
         ->text($mail->getContent());

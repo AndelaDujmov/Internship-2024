@@ -68,7 +68,6 @@ class TeamController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
     
     #[Route('/team/leaders/{teamId}', name:'app_team_add_leaders')]
     public function addLeaders(Request $request, string $teamId): Response {

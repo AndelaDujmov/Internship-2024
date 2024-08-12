@@ -29,7 +29,7 @@ security:
                 path: app_logout
                 target: /login
                 invalidate_session: true
-
+       
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

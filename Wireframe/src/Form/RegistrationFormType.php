@@ -73,8 +73,6 @@ class RegistrationFormType extends AbstractType
                 'data' => 20,
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
@@ -84,7 +82,6 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
@@ -102,12 +99,8 @@ class RegistrationFormType extends AbstractType
             $form = $event->getForm();
             $data = $event->getData();
 
-            // If the role is ROLE_WORKER, make vacationDays required
-            if (isset($data['role']) && $data['role'] === \App\Enum\Role::WORKER->value) {
-                $form->add('vacationDays', IntegerType::class, [
-                    'label' => 'Vacation Days',
-                    'required' => true, // Make vacationDays required for workers
-                ]);
+            if (isset($data['role']) && $data['role'] != \App\Enum\Role::WORKER->value) {
+                $form->remove('vacationDays');
             }
         });
     }

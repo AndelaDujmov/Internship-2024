@@ -55,11 +55,25 @@
     <body>
         <div class="navbar">
             <a href="/" class="active">Home</a>
-            <a href="/team">Teams</a>
-            <a href="/annual/leaves">Annual Leaves</a>
-            <a href="/user">Users</a>
-            <a href="/annual/leaves/request/create">Vacation Request</a>
-            <a>Calendar</a>
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROJECTLEADER') %}
+                <a href="/team">Teams</a>
+            {% endif %}
+            {% if not is_granted('ROLE_WORKER') %}
+                <a>Calendar</a>
+            {% endif %}
+            {% if is_granted('ROLE_WORKER') %}
+                <a href="/annual/leaves">Claims</a>
+            {% else %}
+                <a href="/annual/leaves">Annual Leaves</a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="/user">Users</a>
+            {% endif %}
+            {% if is_granted('ROLE_WORKER') %}
+                <a href="/annual/leaves/request/create">Claims</a>
+            {% else %}
+                <a href="/annual/leaves/request/create">Vacation Request</a>
+            {% endif %}
             <a href="/logout" class="logout">Logout</a>
      
         </div>

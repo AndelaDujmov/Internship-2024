@@ -43,6 +43,7 @@ class UserController extends AbstractController
         $user = $this->userService->getUserById($userId);
 
         $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->remove('agreeTerms');
 
         $form->handleRequest($request);
 

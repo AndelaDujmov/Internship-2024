@@ -49,11 +49,15 @@ class TeamFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event): void {
+            /*->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event): void {
                 $user = $event->getData();
                 $form = $event->getForm();
-          
-            })
+                
+                if (isset($data['start']) && isset($data['end'])){
+                    $value = $this->annualLeaveService->createRequestForAL($userId, $annualLeave);
+                    $totalDays = $this->annualLeaveService->calculateVacationDays($annualLeave->getStart(), $annualLeave->getEnd());
+                }
+            })*/
         ;
     }
 

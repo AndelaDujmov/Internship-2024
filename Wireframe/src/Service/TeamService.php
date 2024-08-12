@@ -46,7 +46,6 @@ class TeamService {
         return $this->annualLeaveRepository->findByUser($userId);
     }
 
-
     public function showLeaders(string $idTeam) : array {
         $team = self::$teamRepository->find($idTeam);
 
