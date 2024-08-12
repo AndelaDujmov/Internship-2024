@@ -4,19 +4,23 @@ namespace App\Controller;
 
 use App\Entity\RequestForAL;
 use App\Form\AddVacationFormType;
+use App\Security\TemplateVoters;
 use Exception;
 use App\Service\AnnualLeaveService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AnnualLeavesController extends AbstractController
 {
     private $annualLeaveService;
+    private $authorizationChecker;
 
-    public function __construct(AnnualLeaveService $annualLeaveService) {
+    public function __construct(AnnualLeaveService $annualLeaveService, AuthorizationCheckerInterface $authorizationChecker) {
         $this->annualLeaveService = $annualLeaveService;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     #[Route('/annual/leaves', name: 'app_annual_leaves')]
@@ -25,6 +29,11 @@ class AnnualLeavesController extends AbstractController
         $user = $this->getUser();
 
         $annualRequests = $this->annualLeaveService->getAll($user);
+        if ($this->authorizationChecker->isGranted(TemplateVoters::VIEW))
+            return $this->render('annual_leaves/indexLeaders.html.twig', [
+                'controller_name' => 'AnnualLeavesController',
+                'requests' => $annualRequests,
+            ]);
         
         return $this->render('annual_leaves/index.html.twig', [
             'controller_name' => 'AnnualLeavesController',

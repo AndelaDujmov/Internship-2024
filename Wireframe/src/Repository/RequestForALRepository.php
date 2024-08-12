@@ -38,15 +38,24 @@ class RequestForALRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    public function findByUser(string $id){
+    public function findByUser(string $id)
+    {
         return $this->createQueryBuilder('r')
-                    ->where('r.worker = :user')
-                    ->setParameter('user', $id)
-                    ->orderBy('r.end', 'DESC')
-                    ->orderBy('r.start', 'DESC')
-                    ->getQuery()
-                    ->getResult()
-                    ;
+            ->where('r.worker = :user')
+            ->setParameter('user', $id)
+            ->orderBy('CASE 
+                WHEN r.status = :pending THEN 1 
+                WHEN r.status = :accepted THEN 2 
+                WHEN r.status = :rejected THEN 3 
+                ELSE 4 
+            END', 'ASC')
+            ->addOrderBy('r.end', 'DESC')
+            ->addOrderBy('r.start', 'DESC')
+            ->setParameter('pending', \App\Enum\Status::PENDING)
+            ->setParameter('accepted', \App\Enum\Status::COMPLETED)
+            ->setParameter('rejected', \App\Enum\Status::CANCELLED)
+            ->getQuery()
+            ->getResult();
     }
     
     public function findByUsers(array $ids)
