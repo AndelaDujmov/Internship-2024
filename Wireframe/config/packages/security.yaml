@@ -7,8 +7,10 @@ security:
     providers:
         app_user_provider:
             entity:
-                class: App\Entity\User
-                property: email
+                #class: App\Entity\User
+                #property:emaiil
+                class: App\Entity\AuthenticatedUser
+                property: username
     firewalls:
         dev:
             pattern:

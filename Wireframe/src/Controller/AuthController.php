@@ -45,14 +45,6 @@ class AuthController extends AbstractController
             ]);
         }
 
-      
-        if (!is_array($data)) {
-            return new JsonResponse([
-                'status' => 400,
-                'message' => 'Invalid data format'
-            ]);
-        }
-
         $username = $data['username'] ?? null;
         $password = $data['password'] ?? null;
 
@@ -72,30 +64,65 @@ class AuthController extends AbstractController
         $user->setContractStartDate(new \DateTime());
         $user->setContractEndDate(Carbon::now()->addYear());
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        $token = $this->jwtTokenManager->create($user);
-
         return new JsonResponse([
             'status' => 200,
-            'message' => 'User registered successfully',
-            'token' => $token
+            'message' => 'User registered successfully'
         ]);
     }
 
-    #[Route('/login', name: 'app_login', methods: ['POST'])]
-    public function login(): JsonResponse
+    #[Route('/auth/login', name: 'app_auth_login', methods: ['POST'])]
+    public function login(Request $request): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new JsonResponse([
+                'status' => 400,
+                'message' => 'Invalid JSON format'
+            ]);
+        }
+
+        $username = $data['username'] ?? null;
+        $password = $data['password'] ?? null;
+
+        if (empty($username) || empty($password)) {
+            return new JsonResponse([
+                'status' => 400,
+                'message' => 'Username or password cannot be empty'
+            ]);
+        }
+
+        $user = $this->entityManager->getRepository(AuthenticatedUser::class)->findOneBy(['name' => $username]);
+
+        if ($user == null) {
+            return new JsonResponse([
+                'status' => 404,
+                'message' => 'User ne postoji'
+            ]);
+        }
+
+        try {
+            $token = $this->jwtTokenManager->create($user);
+            if (!$token) {
+                throw new \Exception('Token creation returned empty value.');
+            }
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'status' => 500,
+                'message' => 'Error creating token: ' . $e->getMessage()
+            ]);
+        }
+        
         return new JsonResponse(
             [
                 'status' => 200,
-                'message' => 'OK',
+                'message' => 'Succesfully logged in',
+                'token' => $token
             ]
         );
     }
 
-    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    #[Route('/auth/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): JsonResponse
     {
         return new JsonResponse(
@@ -107,10 +134,10 @@ class AuthController extends AbstractController
         );
     }
 
-    #[Route('/user', name: 'app_authentication_user', methods: ['GET'])]
+    #[Route('/auth/user', name: 'app_authentication_user', methods: ['GET'])]
     public function getAuthenticatedUser(): JsonResponse
     {
-        $user = $this->getUser()->getUserIdentifier();
+        $user = $this->getUser();
         return new JsonResponse(
             [
                 'status' => 200,
