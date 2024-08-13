@@ -42,7 +42,7 @@ class AppCommandUpdateVacationDaysCommand extends Command
 
         foreach ($users as $user) {
             if (!in_array(\App\Enum\Role::ADMIN, $user->getRoles()))
-                $user->setVacationDays($user->getVacationDays() + 20);
+                $user->setVacationDays($user->getVacationDays() + 20 );
         }
 
         $this->entityManager->flush();
