@@ -38,15 +38,15 @@ class AppCommandUpdateVacationDaysCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $days = (int) $input->getArgument('days');
         
-        $userRepository = $this->entityManager->getRepository(User::class);
-        $users = $userRepository->findAll();
+        $connection = $this->entityManager->getConnection();
 
-        foreach ($users as $user) {
-            if (!in_array(\App\Enum\Role::ADMIN, $user->getRoles()))
-                $user->setVacationDays($user->getVacationDays() + $days );
-        }
+        $sql = "UPDATE user 
+                SET vacation_days = vacation_days + :days
+                WHERE FIND_IN_SET('ROLE_ADMIN', roles) = 0";
 
-        $this->entityManager->flush();
+        $params = ['days' => $days];
+        
+        $connection->executeStatement($sql, $params);
 
         $io->success('Successfully added '. $days .' days to each employee.');
 
