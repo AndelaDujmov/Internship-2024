@@ -239,6 +239,21 @@ To see or edit cron jobs:
     php bin/console app:add-vacation-days
 ```
 
+### API 
+
+Generating JWT key: 
+
+```bash
+    #create folder for keys
+    mkdir -p config/jwt
+
+    #generate private key
+    openssl genrsa -out config/jwt/private.pem -aes256 4096
+
+    #generate public key
+    openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+```
+
 ## Project Details
 
 **Entity dir :** src/Entity <br>

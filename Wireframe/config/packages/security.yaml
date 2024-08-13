@@ -20,6 +20,7 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            entry_point: jwt
             form_login:
                 # "app_login" is the name of the route created previously
                 login_path: app_login
@@ -29,6 +30,10 @@ security:
                 path: app_logout
                 target: /login
                 invalidate_session: true
+            jwt: ~
+           
+
+            stateless: true 
        
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
