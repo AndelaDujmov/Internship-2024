@@ -22,7 +22,6 @@ security:
             provider: app_user_provider
             entry_point: jwt
             form_login:
-                # "app_login" is the name of the route created previously
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
@@ -44,7 +43,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/login/, roles: PUBLIC_ACCESS }
+        - { path: ^/auth/, roles: PUBLIC_ACCESS }
         - { path: ^/team, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/teams/create, roles: ROLE_ADMIN }
         - { path: ^/teams/see/workers, roles: ROLE_PROJECTLEADER }
