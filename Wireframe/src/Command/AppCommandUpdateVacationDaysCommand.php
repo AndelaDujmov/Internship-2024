@@ -27,7 +27,7 @@ class AppCommandUpdateVacationDaysCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
+            ->addArgument('days', InputArgument::REQUIRED, 'Number of vacation days to add')
             ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
             ->setDescription('Adds 20 days to employees each year')
         ;
@@ -36,18 +36,19 @@ class AppCommandUpdateVacationDaysCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $days = (int) $input->getArgument('days');
         
         $userRepository = $this->entityManager->getRepository(User::class);
         $users = $userRepository->findAll();
 
         foreach ($users as $user) {
             if (!in_array(\App\Enum\Role::ADMIN, $user->getRoles()))
-                $user->setVacationDays($user->getVacationDays() + 20 );
+                $user->setVacationDays($user->getVacationDays() + $days );
         }
 
         $this->entityManager->flush();
 
-        $io->success('Successfully added new 20 days to each employee.');
+        $io->success('Successfully added '. $days .' days to each employee.');
 
         return Command::SUCCESS;
     }
