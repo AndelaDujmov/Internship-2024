@@ -170,7 +170,6 @@ class AnnualLeaveService {
     private function returnLeavesByLeader(User $user) : array {
         if (in_array(\App\Enum\Role::TEAMLEADER->value, $user->getRoles())){
             $teams = $this->teamLeadersRepository->findAll();
-            $teamLeaders = [];
             $annualLeaves = [];
 
             foreach ($teams as $teamLeader) {
@@ -188,7 +187,24 @@ class AnnualLeaveService {
             }
             return $annualLeaves;   
         }
-        return [];
+
+        $teams = $this->teamLeadersRepository->findAll();
+        $annualLeaves = [];
+
+        foreach ($teams as $teamLeader) {
+            if ($teamLeader->getProjectLeader()->getId() === $user->getId()) {
+                $teamName = $teamLeader->getTeam()->getName();
+                $teamMembers = $teamLeader->getTeam()->getMembers()->toArray();
+               
+                
+                foreach ($teamMembers as $member){
+                    $annualLeaves[] = $this->teamService->getUsersVacation($member->getId());
+                }
+
+                $teamLeaders[$teamName] = $teamMembers;
+            }
+        }
+        return $annualLeaves; 
     }
 
 }

@@ -74,6 +74,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         });
     }
 
+    public function returnEmployees()  : array {
+        $users = $this->findAll();
+
+        return array_filter($users, function(User $user) {
+            if (!$user->hasRole(\App\Enum\Role::ADMIN->value)) {
+                return false;
+            }
+            return true;
+        });
+    }
+
     public function updateUser() : void {
         $this->getEntityManager()->flush();
     }

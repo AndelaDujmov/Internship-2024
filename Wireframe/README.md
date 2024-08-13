@@ -229,6 +229,16 @@ In security.yaml
     php bin/console messenger:consume async
 ```
 
+### CRON
+
+To see or edit cron jobs:
+```bash
+    crontab -e
+
+    #configure and register command we created in Command file
+    php bin/console app:add-vacation-days
+```
+
 ## Project Details
 
 **Entity dir :** src/Entity <br>

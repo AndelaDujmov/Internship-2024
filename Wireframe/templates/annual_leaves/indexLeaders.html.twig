@@ -92,6 +92,30 @@
     .icon:hover {
         background-color: #0056b3; 
     }
+
+    .status-accepted {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        color: white;
+        background-color: green;
+    }
+    
+    .status-rejected {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        color: white;
+        background-color: red;
+    }
+    
+    .status-pending {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        color: white;
+        background-color: orange;
+    }    
 </style>
 
 <div class="example-wrapper">
@@ -112,16 +136,20 @@
             </thead>
             <tbody>
                 {% for request in requests %}
-                    {% for team in request %}
+                    {% for vacation in request %}
                         <tr>
                             <td>
-                                {{ team.getStart()|date('d-m-Y') }} - {{ team.getEnd()|date('d-m-Y') }}
+                                {{ vacation.getStart()|date('d-m-Y') }} - {{ vacation.getEnd()|date('d-m-Y') }}
                             </td>
-                            <td>{{ team.getReason() }}</td>
-                            <td>{{ team.getStatus() }}</td>
-                            <td>{{ team.getWorker().getTeam().getName() }}</td>
-                            <td>{{ team.getWorker().getUsername() }}</td>
-                            <td>Info</td>
+                            <td>{{ vacation.getReason() }}</td>
+                            <td>
+                                <span class="{% if vacation.getStatus() == 'Approved' %} status-accepted {% elseif vacation.getStatus() == 'Rejected' %} status-rejected {% else %} status-pending {% endif %}">
+                                    {{ vacation.getStatus() }}
+                                </span>
+                            </td>   
+                            <td>{{ vacation.getWorker().getTeam().getName() }}</td>
+                            <td>{{ vacation.getWorker().getUsername() }}</td>
+                            <td> <a  id="anchor" href="{{ path('app_annual_leaves_check', {'requestId': vacation.getId() }) }}"><i class="info-icon" title="More information">i</i></a></td>
                         </tr>
                     {% endfor %}
                 {% endfor %}

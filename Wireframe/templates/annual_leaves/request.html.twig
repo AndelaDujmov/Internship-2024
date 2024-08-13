@@ -64,6 +64,30 @@
         display: flex;
         gap: 10px; 
     }
+
+    .status-accepted {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        color: white;
+        background-color: green;
+    }
+    
+    .status-rejected {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        color: white;
+        background-color: red;
+    }
+    
+    .status-pending {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        color: white;
+        background-color: orange;
+    }    
 </style>
 
 <div class="container">
@@ -84,7 +108,11 @@
         </tr>
         <tr>
             <th>Status</th>
-            <td>{{ leave.getStatus() }}</td>
+            <td>
+                <span class="{% if leave.getStatus() == 'Approved' %} status-accepted {% elseif leave.getStatus() == 'Rejected' %} status-rejected {% else %} status-pending {% endif %}">
+                    {{ leave.getStatus() }}
+                </span>
+            </td>
         </tr>
         <tr>
             <th>Date of Processing</th>
@@ -96,15 +124,17 @@
         </tr>
     </table>
 
-    {% if is_granted('ROLE_TEAMLEADER') or is_granted('ROLE_PROJECTLEADER') %}
-    <div class="button-group">
-        <form method="get" action="{{ path('app_annual_leaves_accept', {'id': leave.getId()}) }}">
-            <button type="submit" class="btn-success">Accept</button>
-        </form>
-        <form method="get" action="{{ path('app_annual_leaves_decline', {'id': leave.getId()}) }}">
-            <button type="submit" class="btn-danger">Decline</button>
-        </form>
-    </div>  
+    {% if leave.getStatus() == 'Pending' %}
+        {% if is_granted('ROLE_TEAMLEADER') or is_granted('ROLE_PROJECTLEADER') %}
+            <div class="button-group">
+                <form method="get" action="{{ path('app_annual_leaves_accept', {'id': leave.getId()}) }}">
+                    <button type="submit" class="btn-success">Accept</button>
+                </form>
+                <form method="get" action="{{ path('app_annual_leaves_decline', {'id': leave.getId()}) }}">
+                    <button type="submit" class="btn-danger">Decline</button>
+                </form>
+            </div>  
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}
