@@ -10,7 +10,7 @@ security:
                 #class: App\Entity\User
                 #property:emaiil
                 class: App\Entity\AuthenticatedUser
-                property: username
+                property: name
     firewalls:
         dev:
             pattern:
@@ -21,7 +21,7 @@ security:
                 - ^/js/
         main:
             lazy: true
-            provider: app_user_provider
+            provider: 
             entry_point: jwt
             form_login:
                 login_path: app_login
@@ -48,6 +48,8 @@ security:
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/login/, roles: PUBLIC_ACCESS }
         - { path: ^/auth/, roles: PUBLIC_ACCESS }
+        - { path: ^/auth/user, roles: ROLE_USER }
+        - { path: ^/auth/user/export, roles: ROLE_USER }
         - { path: ^/team, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/teams/create, roles: ROLE_ADMIN }
         - { path: ^/teams/see/workers, roles: ROLE_PROJECTLEADER }

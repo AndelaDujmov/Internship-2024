@@ -25,7 +25,7 @@ class UserAuthFixture extends Fixture
 
         for ($i = 0; $i < 100; $i++) {
             $user = new AuthenticatedUser();
-            $user->setName($mocked->name . $i);
+            $user->setName($mocked->userName . $i);
             $user->setPassword($this->passwordEncoder->hashPassword($user, $mocked->password));
             $user->setVerified(true);
             $user->setContractStartDate(new \DateTime());

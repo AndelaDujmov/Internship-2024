@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\AuthenticatedUser;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use League\Csv\Writer;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,7 +35,7 @@ class AuthController extends AbstractController
         ]);
     }
 
-    #[Route('/auth/register', name: 'app_register', methods: ['POST'])]
+    #[Route('/auth/register', name: 'app_auth_register', methods: ['POST'])]
     public function register(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -63,6 +65,9 @@ class AuthController extends AbstractController
         $user->setRoles(['USER_ROLE']);
         $user->setContractStartDate(new \DateTime());
         $user->setContractEndDate(Carbon::now()->addYear());
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return new JsonResponse([
             'status' => 200,
@@ -142,8 +147,67 @@ class AuthController extends AbstractController
             [
                 'status' => 200,
                 'message' => 'OK',
-                'data' => $user
+                'data' => $user->getUserIdentifier()
             ]
         );
     }
+
+    #[Route('/auth/user/export', name: 'app_user_export', methods: ['GET'])]
+    public function exportUserPDF(Request $request): Response
+    {
+        $format = $request->query->get('format');
+        $users = $this->entityManager->getRepository(AuthenticatedUser::class)->findAll();
+
+        switch ($format) {
+            case 'csv':
+                $csv = $this->exportCsv($users);
+                return new Response($csv, 200, [
+                    'Content-Type' => 'text/csv',
+                    'Content-Disposition' => 'attachment; filename="users.csv"',
+                ]);
+            case 'pdf':
+                $pdf = $this->exportPdf($users);
+                return new Response($pdf->output(), 200, [
+                   'Content-Type' => 'application/pdf',
+                   'Content-Disposition' => 'attachment; filename="users.pdf"',
+                ]);
+            default:
+                break;
+        }
+
+        return new JsonResponse(
+            [
+                'status' => 500,
+                'message' => 'BAD REQUEST',
+                'data' => 'Failed to load data'
+            ]
+        );
+    }
+
+    private function exportCsv(array $users) : Writer {
+        $csv = Writer::createFromString('');
+        $csv->insertOne(['Name', 'Type', 'Verified']);
+        foreach ($users as $user) {
+            $csv->insertOne([$user->getName(), $user->getType(), $user->isVerified()]);
+        }
+
+        return $csv;
+    }
+
+    private function exportPdf(array $users) : Dompdf {
+        $pdf = new Dompdf();
+
+        $html = $this->renderView('pdf/users.html.twig', [
+            'users' => $users,
+        ]);
+
+        $pdf->loadHtml($html);
+
+        $pdf->setPaper('A4', 'portrait');
+
+        $pdf->render();
+
+        return $pdf;
+    }
+
 }

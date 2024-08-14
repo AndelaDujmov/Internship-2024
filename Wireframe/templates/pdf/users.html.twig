@@ -1,0 +1,70 @@
+{# templates/pdf/users.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>User List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Contract Start Date</th>
+                <th>Contract End Date</th>
+                <th>Type</th>
+                <th>Verified</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.getId() }}</td>
+                <td>{{ user.getName() }}</td>
+                <td>
+                    {% if user.getContractStartDate() %}
+                        {{ user.getContractStartDate()|date('Y-m-d') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.getContractEndDate() %}
+                        {{ user.getContractEndDate()|date('Y-m-d') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ user.getType() }}</td>
+                <td>{{ user.isVerified() ? 'Yes' : 'No' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No users found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
