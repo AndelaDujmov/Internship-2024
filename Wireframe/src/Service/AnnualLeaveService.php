@@ -155,8 +155,18 @@ class AnnualLeaveService {
         $this->requestForALRepository->update($alRequest);
     }
 
-    private function sendMail(string $email, string $subject, string $message): void {
-        $message = new MailNotification($email, $subject, $message);
+    public function sendMail(string $email, string $subject, string $message, ?array $attachments = []): void {
+
+        if(count($attachments) > 0){
+            $attachments = array_map(function($filepath) {
+                return [
+                    'path' => $filepath,
+                    'name' => basename($filepath)
+                ];
+            }, $attachments);
+        } 
+
+        $message = new MailNotification($email, $subject, $message, $attachments);
         $this->bus->dispatch($message);
     }
 

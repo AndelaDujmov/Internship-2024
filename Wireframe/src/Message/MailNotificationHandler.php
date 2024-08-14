@@ -22,6 +22,12 @@ class MailNotificationHandler {
         ->to($mail->getTo())
         ->subject($mail->getSubject())
         ->text($mail->getContent());
+    
+        foreach ($mail->getAttachments() as $attachment){
+            if (file_exists($attachment['path'])){
+                $email->attachFromPath($attachment['path'], $attachment['name']);
+            }
+        }
 
         try{
             $this->mailer->send($email);

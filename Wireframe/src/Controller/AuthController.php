@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\AuthenticatedUser;
+use App\Service\AnnualLeaveService;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use League\Csv\Writer;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,11 +22,13 @@ class AuthController extends AbstractController
     private $passwordEncoder;
     private $jwtTokenManager;
     private $entityManager;
+    private $leaveService;
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface, JWTTokenManagerInterface $jWTTokenManagerInterface, EntityManagerInterface $em) {
+    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface, JWTTokenManagerInterface $jWTTokenManagerInterface, EntityManagerInterface $em, AnnualLeaveService $annualLeaveService) {
         $this->passwordEncoder = $userPasswordHasherInterface;
         $this->jwtTokenManager = $jWTTokenManagerInterface;
         $this->entityManager = $em;
+        $this->leaveService = $annualLeaveService;
     }
 
     #[Route('/auth', name: 'app_auth')]
@@ -191,6 +195,11 @@ class AuthController extends AbstractController
             $csv->insertOne([$user->getName(), $user->getType(), $user->isVerified()]);
         }
 
+        $filepath = '/home/andela/Desktop/Internship2024/Wireframe/tmp/exported.csv';
+        file_put_contents($filepath, $csv);
+
+        $this->leaveService->sendMail('pebedi3335@givehit.com', 'CSV File', 'You will get a csv file', [$filepath]);
+
         return $csv;
     }
 
@@ -206,6 +215,12 @@ class AuthController extends AbstractController
         $pdf->setPaper('A4', 'portrait');
 
         $pdf->render();
+
+        $filepath = '/home/andela/Desktop/Internship2024/Wireframe/tmp/exported.pdf';
+
+        file_put_contents($filepath, $pdf);
+
+        $this->leaveService->sendMail('pebedi3335@givehit.com', 'PDF File', 'You will get a pdf file', [$filepath]);
 
         return $pdf;
     }
