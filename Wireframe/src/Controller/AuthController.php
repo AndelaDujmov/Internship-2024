@@ -9,13 +9,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use League\Csv\Writer;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RateLimiter\RequestRateLimiterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class AuthController extends AbstractController
 {
@@ -23,12 +27,14 @@ class AuthController extends AbstractController
     private $jwtTokenManager;
     private $entityManager;
     private $leaveService;
+    private $cache;
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface, JWTTokenManagerInterface $jWTTokenManagerInterface, EntityManagerInterface $em, AnnualLeaveService $annualLeaveService) {
+    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface, JWTTokenManagerInterface $jWTTokenManagerInterface, EntityManagerInterface $em, AnnualLeaveService $annualLeaveService, CacheItemPoolInterface $cache) {
         $this->passwordEncoder = $userPasswordHasherInterface;
         $this->jwtTokenManager = $jWTTokenManagerInterface;
         $this->entityManager = $em;
         $this->leaveService = $annualLeaveService;
+        $this->cache = $cache;
     }
 
     #[Route('/auth', name: 'app_auth')]
@@ -36,6 +42,7 @@ class AuthController extends AbstractController
     {
         return $this->render('auth/index.html.twig', [
             'controller_name' => 'AuthController',
+            
         ]);
     }
 
@@ -157,10 +164,40 @@ class AuthController extends AbstractController
     }
 
     #[Route('/auth/user/export', name: 'app_user_export', methods: ['GET'])]
-    public function exportUserPDF(Request $request): Response
+    public function exportUser(Request $request): Response
     {
         $format = $request->query->get('format');
-        $users = $this->entityManager->getRepository(AuthenticatedUser::class)->findAll();
+        $repo = $this->entityManager->getRepository(AuthenticatedUser::class);
+        $users = $repo->findAll();
+        $username = $this->getUser()->getUserIdentifier();
+        $user = $repo->findOneBy(['name'=> $username]);
+
+        $cacheKey = 'user_export_' . $user->getId();
+        $limit = 2;
+        $interval = 10 * 60;
+
+        $cacheItem = $this->cache->getItem($cacheKey);
+
+        $requestData = $cacheItem->isHit() ? $cacheItem->get() : ['count' => 0, 'timestamp' => time()];
+
+        $elapsedTime = time() - $requestData['timestamp'];
+
+        if ($elapsedTime > $interval){
+            $requestData['count'] = 0;
+            $requestData['timestamp'] = time();
+        }
+        
+        $requestData['count'] ++;
+
+        if ($requestData['count'] > $limit){
+            return new JsonResponse(
+                [
+                    'status' => 429,
+                    'message' => 'Too Many Requests',
+                    'data' => 'Cache overloaded'
+                ]
+            );
+        }
 
         switch ($format) {
             case 'csv':
@@ -172,20 +209,12 @@ class AuthController extends AbstractController
             case 'pdf':
                 $pdf = $this->exportPdf($users);
                 return new Response($pdf->output(), 200, [
-                   'Content-Type' => 'application/pdf',
-                   'Content-Disposition' => 'attachment; filename="users.pdf"',
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="users.pdf"',
                 ]);
             default:
                 break;
         }
-
-        return new JsonResponse(
-            [
-                'status' => 500,
-                'message' => 'BAD REQUEST',
-                'data' => 'Failed to load data'
-            ]
-        );
     }
 
     private function exportCsv(array $users) : Writer {
@@ -195,7 +224,7 @@ class AuthController extends AbstractController
             $csv->insertOne([$user->getName(), $user->getType(), $user->isVerified()]);
         }
 
-        $filepath = '/home/andela/Desktop/Internship2024/Wireframe/tmp/exported.csv';
+        $filepath = sys_get_temp_dir() . '/exported.csv';
         file_put_contents($filepath, $csv);
 
         $this->leaveService->sendMail('pebedi3335@givehit.com', 'CSV File', 'You will get a csv file', [$filepath]);
@@ -216,9 +245,9 @@ class AuthController extends AbstractController
 
         $pdf->render();
 
-        $filepath = '/home/andela/Desktop/Internship2024/Wireframe/tmp/exported.pdf';
+        $filepath = sys_get_temp_dir() . '/exported.pdf';
 
-        file_put_contents($filepath, $pdf);
+        file_put_contents($filepath, $pdf->output());
 
         $this->leaveService->sendMail('pebedi3335@givehit.com', 'PDF File', 'You will get a pdf file', [$filepath]);
 

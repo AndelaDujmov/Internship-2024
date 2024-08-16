@@ -14,6 +14,13 @@ framework:
         routing:
             # async is whatever name you gave your transport above
             'App\Message\MailNotification': async
+    cache:
+        app: cache.adapter.filesystem 
+    rate_limiter:
+        export_user_limiter:
+            policy: 'fixed_window'
+            limit: 2
+            interval: '10 minutes'
 
     # Uncomment if using ESI or fragments
     # esi: true
